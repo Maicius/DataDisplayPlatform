@@ -1,5 +1,5 @@
 const Main = {
-	target: process.env.NODE_ENV !== 'production' ? 'http://admin.sosout.com' : 'http://admin.sosout.com', //目标网站
+	target: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080/' : 'http://localhost:8080/', //目标网站
     name: 'Ant Design Admin',
     prefix: 'antdAdmin',
     footerText: 'Ant Design Admin 版权所有 © 2017 由 sosout 支持',

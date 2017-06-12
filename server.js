@@ -5,8 +5,8 @@ var config = require('./webpack.config.dev'); // 正常编译配置
 // 代理服务器
 var proxy = [{
     path: '/*/*', //必须得有一个文件地址，如果顶层文件夹名字不同，则用/*代替
-    target: 'http://admin.sosout.com',
-    host: 'admin.sosout.com',
+    target: 'http://localhost:8080/',
+    host: 'http://localhost:8080/',
     secure: false
 }];
 

@@ -35,8 +35,8 @@ class Login extends Component {
                                 verifyCode: verifyCode,
 							};
 					this.setState({ loginBtnLoading: true, loginBtnText: '登录中...' });
-		    	this.props.getData('/user/login', loginParams, (res) => {
-						if(res.length > 0) {
+		    	this.props.getData('userLogin.action', loginParams, (res) => {
+						if(res !== 'failed') {
 								Config.localItem(Config.localKey.userToken, (new Date()).getTime()); // 模拟登录成功返回的Token
 								this.context.router.push({ 
 										pathname: '/home' 
@@ -89,7 +89,7 @@ class Login extends Component {
 					<Form onSubmit={this.handleSubmit}>
 				        <FormItem hasFeedback>
 				          {getFieldDecorator('username', {
-										initialValue: '',
+										initialValue: 'maicius',
 				            rules: [{ 
 											required: true, 
 											message: Config.message.usernameInput 
@@ -97,11 +97,12 @@ class Login extends Component {
 				              validator: this.checkUsername
 				            }],
 				          })(
-				            <Input size="large" placeholder="真实手机号" maxLength="6" />
+				            <Input size="large" placeholder="真实手机号" maxLength="12" />
 				          )}
 				        </FormItem>
 				        <FormItem hasFeedback>
 				          {getFieldDecorator('password', {
+				              initialValue:'110110',
 				            rules: [{
 				              required: true,
 											message: Config.message.passwordInput,
@@ -109,7 +110,7 @@ class Login extends Component {
 				              validator: this.checkPassword
 				            }],
 				          })(
-				            <Input size="large" type="password" placeholder="密码" maxLength="6" />
+				            <Input size="large" type="password" placeholder="密码" maxLength="16" minLength="6"/>
 				          )}
 				        </FormItem>
                         <FormItem>
