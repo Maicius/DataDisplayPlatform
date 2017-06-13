@@ -4,8 +4,9 @@
   "description": "基于react + redux + immutable + less + ES6/7 + webpack + fetch + react-router + antd(1.x)实现的SPA后台管理系统模板",
   "main": "server.js",
   "scripts": {
-    "dev": "node server.js",
+    "dev": "node $NODE_DEBUG_OPTION server.js --arguments",
     "hot": "node server_hot.js",
+    "start": "node $NODE_DEBUG_OPTION ./src/view/login/login.jsx",
     "dist": "cross-env NODE_ENV=production webpack --config webpack.config.dist.js --progress --colors -p"
   },
   "repository": {

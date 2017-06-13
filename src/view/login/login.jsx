@@ -36,7 +36,7 @@ class Login extends Component {
 							};
 					this.setState({ loginBtnLoading: true, loginBtnText: '登录中...' });
 		    	this.props.getData('userLogin.action', loginParams, (res) => {
-						if(res !== 'failed') {
+						if(res !== "") {
 								Config.localItem(Config.localKey.userToken, (new Date()).getTime()); // 模拟登录成功返回的Token
 								this.context.router.push({ 
 										pathname: '/home' 
@@ -48,7 +48,7 @@ class Login extends Component {
 					}, 'userLogin', 'POST');
 		    }
 	    });
-	}
+	};
 	// 验证用户名
 	checkUsername = (rule, value, callback) => {
 		const form = this.props.form;
@@ -59,7 +59,7 @@ class Login extends Component {
 	    } else {
 	    	callback();
 	    }
-	}
+	};
 	// 验证密码
 	checkPassword = (rule, value, callback) => {
 		const form = this.props.form;
@@ -67,7 +67,7 @@ class Login extends Component {
 	    	form.validateFields(['confirm'], { force: true });
 	    }
 	    callback();
-	}
+	};
 	/**
      * 在初始化渲染执行之后立刻调用一次，仅客户端有效（服务器端不会调用）。
      * 在生命周期中的这个时间点，组件拥有一个 DOM 展现，

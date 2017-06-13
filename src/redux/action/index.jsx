@@ -38,6 +38,7 @@ const getDataSuccess = (path, json, success, name) => {
 // 手动调用获取数据的action
 export const getData = (path, postData, success, name, method='GET') => {
 	let url = target + path + Config.paramFormat(postData);
+	console.log(url);
 	return dispatch => {
 		return fetch(url, {
 			method,
@@ -47,10 +48,10 @@ export const getData = (path, postData, success, name, method='GET') => {
 			}
 		})
 		.then(response => response.json())
-		.then(json => dispatch(getDataSuccess(path, json, success, name)))
+		.then(json => dispatch(getDataSuccess(path, json.data, success, name)))
 		.catch(error => console.log(error))
 	}
-}
+};
 
 // 页面初次渲染时Get方式获取数据
 export const fetchGets = (path, postData) => {
