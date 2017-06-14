@@ -48,7 +48,7 @@ export const getData = (path, postData, success, name, method='GET') => {
 			}
 		})
 		.then(response => response.json())
-		.then(json => dispatch(getDataSuccess(path, json.data, success, name)))
+		.then(json => dispatch(getDataSuccess(path, json, success, name)))
 		.catch(error => console.log(error))
 	}
 };
