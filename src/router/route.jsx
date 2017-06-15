@@ -113,7 +113,7 @@ const RouteConfig = (
 			<Route path="/ui/twoui" getComponent={twoui} onEnter={requireAuth} />
 		</Route>
 		<Route path="/login" component={Roots}> // 所有的访问，都跳转到Roots
-			<IndexRoute component={login} /> // 默认加载的组件，比如访问www.test.com,会自动跳转到www.test.com/home
+			<IndexRoute component={login} />
 		</Route>
 		<Redirect from="*" to="/home" />
 	</Router>

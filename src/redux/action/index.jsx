@@ -13,7 +13,7 @@ const requestPosts = path => {
 		type: REQUEST_POSTS,
 		path
 	}
-}
+};
 
 // 获取数据成功
 const receivePosts = (path, json) => {
@@ -22,7 +22,7 @@ const receivePosts = (path, json) => {
 		path,
 		json
 	}
-}
+};
 
 // 获取数据成功
 const getDataSuccess = (path, json, success, name) => {
@@ -33,7 +33,7 @@ const getDataSuccess = (path, json, success, name) => {
 		success,
 		name
 	}
-}
+};
 
 // 手动调用获取数据的action
 export const getData = (path, postData, success, name, method='GET') => {
@@ -71,4 +71,5 @@ export const fetchGets = (path, postData) => {
 		})
 		.catch(error => console.log(error));
 	}
-}  
+};
+
