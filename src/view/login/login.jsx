@@ -146,9 +146,9 @@ Login.contextTypes = {
     router: React.PropTypes.object.isRequired
 };
 
-const Main = Form.create()(Login);
+const login = Form.create()(Login);
 
 export default RenderData({
     id: 'login',  //应用关联使用的redux
-    component: Main //接收数据的组件入口
+    component: login //接收数据的组件入口
 });

@@ -4,7 +4,7 @@ import { Config } from '../../component/mixin';
 export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 export const GET_DATA_SUCCESS = 'GET_DATA_SUCCESS';
-
+export const GET_USER_DIAGRAM_DATA = 'GET_USER_DIAGRAM_DATA';
 const target = Config.target;
 
 // 开始获取数据
@@ -24,6 +24,12 @@ const receivePosts = (path, json) => {
 	}
 };
 
+const getUserDiagramData = (path, json) =>{
+    return {
+        type: GET_USER_DIAGRAM_DATA,
+        path
+    }
+};
 // 获取数据成功
 const getDataSuccess = (path, json, success, name) => {
 	return {
@@ -72,4 +78,5 @@ export const fetchGets = (path, postData) => {
 		.catch(error => console.log(error));
 	}
 };
+
 
