@@ -32,6 +32,7 @@ const getUserDiagramData = (path, json) =>{
 };
 // 获取数据成功
 const getDataSuccess = (path, json, success, name) => {
+    console.log('getDataSuccess' + json);
 	return {
 		type: GET_DATA_SUCCESS,
 		path,
@@ -44,7 +45,7 @@ const getDataSuccess = (path, json, success, name) => {
 // 手动调用获取数据的action
 export const getData = (path, postData, success, name, method='GET') => {
 	let url = target + path + Config.paramFormat(postData);
-	console.log(url);
+	console.log('action getData');
 	return dispatch => {
 		return fetch(url, {
 			method,
@@ -62,6 +63,7 @@ export const getData = (path, postData, success, name, method='GET') => {
 // 页面初次渲染时Get方式获取数据
 export const fetchGets = (path, postData) => {
 	let url = target + path + Config.paramFormat(postData);
+	console.log('fetchGets');
 	return dispatch => {
 		dispatch(requestPosts(postData));
 		return fetch(url, {

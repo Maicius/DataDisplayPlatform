@@ -7,6 +7,7 @@ const defaultlState = Immutable.fromJS({data: {}, isFetching: false});
 export const fetchData = (state = defaultlState , action = {}) => {
     switch(action.type){
         case REQUEST_POSTS:
+            console.log(state);
             return state.set('isFetching',true);
         case RECEIVE_POSTS:
             return Immutable.Map({'data':action.json,'isFetching':false});//返回一个新的state
@@ -19,8 +20,10 @@ export const fetchData = (state = defaultlState , action = {}) => {
 export const requestData = (state = {}, action = {}) => {
 	switch(action.type) {
 		case GET_DATA_SUCCESS:
+		    console.log('success' + action.json);
 			action.success(action.json);
 			state[action.name] = action.json;
+			console.log(state);
 			return state;
 		default:
 			return state;
