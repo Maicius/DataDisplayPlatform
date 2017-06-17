@@ -8,5 +8,5 @@ var store = createStore(
 	combineReducers(reducer),
 	applyMiddleware(thunk)
 );
-
+console.log('createStore');
 export default store;
