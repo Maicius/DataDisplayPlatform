@@ -5,7 +5,7 @@ import { is, fromJS} from 'immutable';
 import { Router, Route, IndexRoute, browserHistory, History, Link } from 'react-router';
 import { connect } from 'react-redux';
 import { RenderData } from '../../component/mixin';
-
+import Websocket from 'react-websocket';
 // 公共面包屑
 import { Bcrumb } from '../../component/bcrumb/bcrumb';
 import styles from './style/home.less';
@@ -15,7 +15,8 @@ const Step = Steps.Step;
 let userDiagramDom;
 let enterRate;
 let bounceRateDom;
-
+let webSocket = null;
+let  userDiagramData = [];
 /* 以类的方式创建一个组件 */
 class Main extends Component {
     constructor(props) {
@@ -24,9 +25,12 @@ class Main extends Component {
              current: 0
         };
     }
-    static propTypes = {
-        userDiagramData: PropTypes.number.isRequired
-    };
+
+    handleData(data) {
+        console.log(data);
+        // let result = JSON.parse(data);
+        // console.log(data);
+    }
     autoResize() {
         let userDiagram = document.getElementById('user-diagram');
         userDiagram.style.width = '100%';
@@ -41,10 +45,20 @@ class Main extends Component {
         enterRate.style.height = '500px';
     }
 
+    handleUserData(data) {
+        //let obj = eval('(' + data + ')');
+        console.log(data);
+        data = JSON.parse(data);
+        let newData = [data.time, data.number];
+        userDiagramData.push(newData);
+        console.log("userDiagramData:" + userDiagramData);
+    }
+
     drawUserDiagram(){
+
         userDiagramDom = echarts.init(document.getElementById('user-diagram'));
         // 绘制图表
-        let data=[];
+        console.log(userDiagramData);
         userDiagramDom.setOption( {
             title: {
                 text: '实时流量',
@@ -58,7 +72,7 @@ class Main extends Component {
                 trigger: 'axis'
             },
             xAxis: {
-                data: data.map(function (item) {
+                data: userDiagramData.map(function (item) {
                     return item[0];
                 }),
                 axisLine:{
@@ -119,7 +133,7 @@ class Main extends Component {
                 name: '顾客流量',
                 left: 'center',
                 type: 'line',
-                data: data.map(function (item) {
+                data: userDiagramData.map(function (item) {
                     return item[1];
                 }),
                 markLine: {
@@ -273,6 +287,25 @@ class Main extends Component {
         this.drawUserDiagram();
         this.drawBounceRate();
         this.drawEnterRate();
+        if ('WebSocket' in window) {
+            webSocket = new WebSocket("ws://localhost:8080/websocket");
+            webSocket.onerror = () =>{
+            };
+            webSocket.onopen = () =>{
+                alert('WebSocket Open');
+            };
+            webSocket.onmessage = (data) =>{
+                console.log('receive data');
+                console.log(data.data);
+                this.handleUserData(data.data);
+            };
+            window.onbeforeunload = function () {
+                webSocket.close();
+            }
+        }
+        else {
+            alert('当前浏览器 Not support websocket')
+        }
     }
 
     componentWillMount(){
@@ -288,7 +321,7 @@ class Main extends Component {
         const current = this.state.current - 1;
         this.setState({ current });
     }
-	render() { 
+	render() {
         let linkHtml = '<link href="/antd/dist/app.css" rel="stylesheet" />';
         const steps = [{
           title: '下载',
