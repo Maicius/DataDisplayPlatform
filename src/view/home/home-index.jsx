@@ -14,16 +14,21 @@ import styles from './style/home.less';
 import { Icon, Row, Col, Card, Steps, Button, message } from 'antd';
 const Step = Steps.Step;
 let userDiagramDom;
-let enterRate, enterRatio;
+let enterRate, checkInRatio, deepAccessRatio, jumpRatio;
 let bounceRateDom;
 let webSocket = null;
+let backColor = '#404a59';
 /* 以类的方式创建一个组件 */
 class Main extends Component {
     constructor(props) {
     	super(props);
         this.state = {
              current: 0,
-             userDiagramData: []
+             userDiagramData: [],
+             checkInFlow: 0,
+             checkInRatio: 0,
+             deepAccessRatio: 0,
+             jumpRatio:0,
         };
     }
 
@@ -32,6 +37,7 @@ class Main extends Component {
         // let result = JSON.parse(data);
         // console.log(data);
     }
+
     autoResize() {
         let userDiagram = document.getElementById('user-diagram');
         userDiagram.style.width = '100%';
@@ -64,14 +70,21 @@ class Main extends Component {
         //let obj = eval('(' + data + ')');
         console.log(data);
         data = JSON.parse(data);
-        let newData = [data.time, data.number];
+        let newData = [data.time, data.totalFlow];
         this.state.userDiagramData.push(newData);
-        this.setState({ userDiagramData: this.state.userDiagramData });
+        this.state.checkInRatio = data.checkInRatio;
+        this.state.checkInFlow = data.checkInFlow;
+        this.state.deepAccessRatio = data.deepAccessRatio;
+        this.state.jumpRatio = data.jumpRatio;
+        this.setState({ userDiagramData: this.state.userDiagramData,
+                        checkInRatio:this.state.checkInRatio,
+                        deepAccessRatio: this.state.deepAccessRatio,
+                        jumpRatio: this.state.jumpRatio,
+                        checkInFlow: this.state.checkInFlow});
         //console.log("userDiagramData:" + userDiagramData);
     }
 
-    drawEnterRatio(){
-
+    drawCheckInRatio(){
         let option = {
             title: {
                 text: '入店率',
@@ -79,23 +92,95 @@ class Main extends Component {
                     color: '#fff'
                 }
             },
-            backgroundColor: '#404a59',
+            backgroundColor: backColor,
             series: [{
                 type: 'liquidFill',
                 radius: '80%',
-                data: [0.6, {
-                    value: 0.5,
+                data: [this.state.checkInRatio, {
+                    value: this.state.checkInRatio-0.1,
                     direction: 'left',
                     itemStyle: {
                         normal: {
                             color: 'red'
                         }
                     }
-                }, 0.4, 0.3]
+                }, {value:this.state.checkInRatio-0.2,
+                    direction: 'left',
+                    itemStyle:{
+                    normal:{
+                        color: 'green'
+                        }
+                    }}, this.state.checkInRatio-0.3]
             }]
         };
-        enterRatio.setOption(option);
+        checkInRatio.setOption(option);
     }
+
+    drawDeepAccessRatio(){
+        let option = {
+            title: {
+                text: '深访率',
+                textStyle:{
+                    color: '#fff'
+                }
+            },
+            backgroundColor: backColor,
+            series: [{
+                type: 'liquidFill',
+                radius: '80%',
+                data: [{value:this.state.deepAccessRatio,
+                        direction: 'right',
+                        itemStyle:{
+                        normal:{
+                            color: 'blue'
+                        }
+                    }}, {
+                    value: this.state.deepAccessRatio-0.1,
+                    direction: 'left',
+                    itemStyle: {
+                        normal: {
+                            color: 'red'
+                        }
+                    }
+                }, {value:this.state.deepAccessRatio-0.2,
+                    direction: 'right',
+                    itemStyle:{
+                        normal:{
+                            color: 'blue'
+                        }
+                    }}, this.state.deepAccessRatio-0.3]
+            }]
+        };
+        deepAccessRatio.setOption(option);
+    }
+
+    drawJumpRatio(){
+        let option = {
+            title: {
+                text: '跳出率',
+                textStyle:{
+                    color: '#fff'
+                }
+            },
+            backgroundColor: backColor,
+            series: [{
+                type: 'liquidFill',
+                radius: '80%',
+                data: [{value: this.state.jumpRatio,
+                        direction: 'left'}, {
+                    value: this.state.jumpRatio+0.1,
+                    direction: 'left',
+                    itemStyle: {
+                        normal: {
+                            color: 'red'
+                        }
+                    }
+                }, this.state.jumpRatio-0.3, this.state.jumpRatio-0.4]
+            }]
+        };
+        jumpRatio.setOption(option);
+    }
+
     drawUserDiagram(){
         // 绘制图表
         //console.trace(userDiagramData);
@@ -107,7 +192,7 @@ class Main extends Component {
                     color: '#fff'
                 }
             },
-            backgroundColor: '#404a59',
+            backgroundColor: backColor,
             tooltip: {
                 trigger: 'axis'
             },
@@ -203,7 +288,7 @@ class Main extends Component {
                     color: '#fff'
                 }
             },
-            backgroundColor: '#404a59',
+            backgroundColor: backColor,
             visualMap: {
                 show: false,
                 min: 80,
@@ -261,7 +346,7 @@ class Main extends Component {
                     color: '#fff'
                 }
             },
-            backgroundColor: '#404a59',
+            backgroundColor: backColor,
             tooltip: {
                 trigger: 'item',
                 formatter: "{a} <br/>{b}: {c} ({d}%)"
@@ -318,7 +403,9 @@ class Main extends Component {
             userDiagramDom.resize();
             enterRate.resize();
             bounceRateDom.resize();
-            enterRatio.resize();
+            checkInRatio.resize();
+            jumpRatio.resize();
+            deepAccessRatio.resize();
         }.bind(this);
 
     }
@@ -327,11 +414,15 @@ class Main extends Component {
         userDiagramDom = echarts.init(document.getElementById('user-diagram'));
         bounceRateDom = echarts.init(document.getElementById('bounce-rate'));
         enterRate = echarts.init(document.getElementById('enter-rate'));
-        enterRatio = echarts.init(document.getElementById('enter-ratio'));
+        checkInRatio = echarts.init(document.getElementById('enter-ratio'));
+        deepAccessRatio = echarts.init(document.getElementById('deep-access-ratio'));
+        jumpRatio = echarts.init(document.getElementById('jump-ratio'));
         this.drawUserDiagram();
         this.drawBounceRate();
         this.drawEnterRate();
-        this.drawEnterRatio();
+        this.drawCheckInRatio();
+        this.drawDeepAccessRatio();
+        this.drawJumpRatio();
         if ('WebSocket' in window) {
             webSocket = new WebSocket("ws://localhost:8080/websocket");
             webSocket.onerror = () =>{
@@ -358,7 +449,7 @@ class Main extends Component {
         this.drawUserDiagram();
         this.drawBounceRate();
         this.drawEnterRate();
-        this.drawEnterRatio();
+        this.drawCheckInRatio();
     }
 
     next() {
