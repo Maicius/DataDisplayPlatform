@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'; // 引入了React和PropTyp
 import { connect } from 'react-redux';
 import { is, fromJS } from 'immutable';
 import { RenderData } from '../../component/mixin';
-
+import { Icon, Row, Col, Card, Button, Radio, Table } from 'antd';
 /* 以类的方式创建一个组件 */
 class Main extends Component {
     constructor(props) {
@@ -12,9 +12,11 @@ class Main extends Component {
         return !is(fromJS(this.props), fromJS(nextProps)) || !is(fromJS(this.state),fromJS(nextState))
     }
 	render() {
-		return (	
+		return (
 		<div className="general-container">
-			图标
+			<Table>
+
+			</Table>
 		</div>
 		);
 	}

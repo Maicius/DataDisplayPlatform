@@ -486,8 +486,7 @@ class Main extends Component {
             alert('当前浏览器 Not support websocket')
         }
     }
-    componentWillMount(){
-    }
+    // shouldComponentUpdate(){}
     componentDidUpdate() {
         this.drawUserDiagram();
         this.drawBounceRate();

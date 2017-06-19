@@ -50,7 +50,7 @@ const home = (location, cb) => {
 // 基础组件-按钮
 const button = (location, cb) => {
     require.ensure([], require => {
-        cb(null, require('../view/general/button-index').default)
+        cb(null, require('../view/general/ProbeUserData').default)
     }, 'button');
 }
 
