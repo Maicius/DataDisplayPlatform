@@ -19,14 +19,20 @@ class Main extends Component {
     }
 	render() {
     	const columns=[
-    		{title:'用户MAC', key:'userMac'},
-			{title:'品牌', key:'brand'},
-			{title:'信号强度', key:'rssi'},
-			{title:'首次出现时间', key: 'first_time'},
-			{title:'最近出现时间', key:'recent_time'},
-			{title:'出现次数', key: 'times'},
-			{title:'探针ID', key: 'probeID'},
-			{title:'查看详情', key: 'view'}
+    		{title:'用户MAC', key:'userMac', dataIndex:'userMac'},
+			{title:'品牌', key:'brand', dataIndex:'brand'},
+			{title:'距离', key:'distance', dataIndex: 'distance'},
+			{title:'首次出现时间', key: 'first_time', dataIndex:'first_time'},
+			{title:'最近出现时间', key:'recent_time', dataIndex:'recent_time'},
+			{title:'出现次数', key: 'times', dataIndex:'times'},
+			{title:'探针ID', key: 'probeID', dataIndex:'probeID'},
+			{title:'查看详情', key: 'view', dataIndex:'view'}
+		];
+    	const data=[
+			{key:1, userMac:'aa:aa:aa:aa:aa:aa', brand:'Iphone', distance:'100', first_time:'2017-05-12 10:00:00',
+			recent_time:'2017-07-12 10:00:00', times: 5, probeID:'00001', view:'点击查看详情'},
+            {key:2, userMac:'aa:aa:aa:aa:aa:aa', brand:'Iphone', distance:'100', first_time:'2017-05-12 10:00:00',
+                recent_time:'2017-07-12 10:00:00', times: 5, probeID:'00001', view:'点击查看详情'}
 		];
         const rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
@@ -37,8 +43,12 @@ class Main extends Component {
     	return(
     	<div>
 			<Bcrumb title="探针数据"/>
-			<Table rowSelection={rowSelection} columns={columns} dataSource={this.state.userDataSource}/>
-
+			<Table rowSelection={rowSelection}
+				   bordered
+				   columns={columns}
+				   expandedRowRender={record => <p>{record.recent_time}</p>}
+				   dataSource={data}
+			     />
 		</div>
 		)
 
