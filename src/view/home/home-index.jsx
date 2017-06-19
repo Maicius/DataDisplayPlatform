@@ -25,17 +25,11 @@ class Main extends Component {
         this.state = {
              current: 0,
              userDiagramData: [],
-             checkInFlow: 0,
+             checkInFlow: [],
              checkInRatio: 0,
              deepAccessRatio: 0,
              jumpRatio:0,
         };
-    }
-
-    handleData(data) {
-        console.log(data);
-        // let result = JSON.parse(data);
-        // console.log(data);
     }
 
     autoResize() {
@@ -73,7 +67,7 @@ class Main extends Component {
         let newData = [data.time, data.totalFlow];
         this.state.userDiagramData.push(newData);
         this.state.checkInRatio = data.checkInRatio;
-        this.state.checkInFlow = data.checkInFlow;
+        this.state.checkInFlow.push(data.checkInFlow);
         this.state.deepAccessRatio = data.deepAccessRatio;
         this.state.jumpRatio = data.jumpRatio;
         this.setState({ userDiagramData: this.state.userDiagramData,
@@ -187,9 +181,22 @@ class Main extends Component {
         userDiagramDom.setOption( {
             title: {
                 text: '实时流量',
-                left: 'center',
+                left: 'left',
                 textStyle:{
                     color: '#fff'
+                }
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
+            },
+            legend: {
+                y: 'top',
+                data: ['区域流量', '入店流量'],
+                textStyle: {
+                    color: '#fff',
+                    fontSize: 16
                 }
             },
             backgroundColor: backColor,
@@ -219,13 +226,28 @@ class Main extends Component {
                 }
             },
             dataZoom: [{
-                startValue: '2017-06-01'
+                startValue: '2017-06-01',
+                textStyle: {
+                    color: '#8392A5'
+                },
+                dataBackground: {
+                    areaStyle: {
+                        color: '#8392A5'
+                    },
+                    lineStyle: {
+                        opacity: 0.8,
+                        color: '#8392A5'
+                    }
+                },
             }, {
                 type: 'inside'
             }],
             visualMap: {
                 top: 10,
                 right: 10,
+                textStyle: {
+                    color: '#fff'
+                },
                 pieces: [{
                     gt: 0,
                     lte: 50,
@@ -254,8 +276,9 @@ class Main extends Component {
                     color: '#999'
                 }
             },
-            series: {
-                name: '顾客流量',
+            series:
+                [{
+                name: '区域流量',
                 left: 'center',
                 type: 'line',
                 data: this.state.userDiagramData.map(function (item) {
@@ -274,8 +297,28 @@ class Main extends Component {
                     }, {
                         yAxis: 300
                     }]
-                }
-            }
+                    }
+                },{
+                    name: '入店流量',
+                    left: 'center',
+                    type: 'line',
+                    data: this.state.checkInFlow,
+                    markLine: {
+                        silent: true,
+                        data: [{
+                            yAxis: 50
+                        }, {
+                            yAxis: 100
+                        }, {
+                            yAxis: 150
+                        }, {
+                            yAxis: 200
+                        }, {
+                            yAxis: 300
+                        }]
+                    }
+                }]
+
         });
     }
 
@@ -451,6 +494,9 @@ class Main extends Component {
         this.drawEnterRate();
         this.drawCheckInRatio();
     }
+    componentShouldUpdate(){
+
+    }
 
     next() {
         console.log("next");
@@ -498,37 +544,6 @@ class Main extends Component {
                     <Col span={12} className="mg-top10">
                         <Card title="入店率" id="enter-rate"/>
                     </Col>
-                    <Card title="项目上手" className="mg-top20" span={24}>
-                        <Steps current={current}>
-                          {steps.map(item => <Step key={item.title} title={item.title} />)}
-                        </Steps>
-                        <div className="steps-content" dangerouslySetInnerHTML={{__html: steps[this.state.current].content}}/>
-                        <div className="steps-action">
-                          {
-                            this.state.current < steps.length - 1
-                            &&
-                            <Button type="primary" onClick={() => this.next()}>下一步</Button>
-                          }
-                          {
-                            this.state.current === steps.length - 1
-                            &&
-                            <Button type="primary" onClick={() => message.success('恭喜您，大牛!')}>完成</Button>
-                          }
-                          {
-                            this.state.current > 0
-                            &&
-                            <Button style={{ marginLeft: 8 }} onClick={() => this.prev()}>
-                              上一步
-                            </Button>
-                          }
-                        </div>
-                    </Card> 
-                    <Card title="访问" className="mg-top20">
-                        <p>在浏览器地址栏输入http://127.0.0.1:8888</p>
-                    </Card> 
-                    <Card title="流量" className="mg-top20">
-                        <p>此项目是本人空余时间搭建的。希望大家提供宝贵的意见和建议，谢谢。</p>
-                    </Card> 
                 </Col>
             </Row>
         </div>	
