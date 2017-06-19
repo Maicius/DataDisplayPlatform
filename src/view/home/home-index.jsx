@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react'; // 引入了React和PropTypes
 import echarts from 'echarts';
+import * as ligquid from 'echarts-liquidfill'
 import pureRender from 'pure-render-decorator';
 import { is, fromJS} from 'immutable';
 import { Router, Route, IndexRoute, browserHistory, History, Link } from 'react-router';
@@ -13,16 +14,16 @@ import styles from './style/home.less';
 import { Icon, Row, Col, Card, Steps, Button, message } from 'antd';
 const Step = Steps.Step;
 let userDiagramDom;
-let enterRate;
+let enterRate, enterRatio;
 let bounceRateDom;
 let webSocket = null;
-let  userDiagramData = [];
 /* 以类的方式创建一个组件 */
 class Main extends Component {
     constructor(props) {
     	super(props);
         this.state = {
-             current: 0
+             current: 0,
+             userDiagramData: []
         };
     }
 
@@ -43,6 +44,20 @@ class Main extends Component {
         let enterRate = document.getElementById('enter-rate');
         enterRate.style.width = '100%';
         enterRate.style.height = '500px';
+
+        let enterRatio = document.getElementById('enter-ratio');
+        enterRatio.style.width = '100%';
+        enterRatio.style.height = '300px';
+
+
+        let deepAccess = document.getElementById('deep-access-ratio');
+        deepAccess.style.width = '100%';
+        deepAccess.style.height = '300px';
+
+
+        let JumpRatio = document.getElementById('jump-ratio');
+        JumpRatio.style.width = '100%';
+        JumpRatio.style.height = '300px';
     }
 
     handleUserData(data) {
@@ -50,15 +65,40 @@ class Main extends Component {
         console.log(data);
         data = JSON.parse(data);
         let newData = [data.time, data.number];
-        userDiagramData.push(newData);
-        console.log("userDiagramData:" + userDiagramData);
+        this.state.userDiagramData.push(newData);
+        this.setState({ userDiagramData: this.state.userDiagramData });
+        //console.log("userDiagramData:" + userDiagramData);
     }
 
-    drawUserDiagram(){
+    drawEnterRatio(){
 
-        userDiagramDom = echarts.init(document.getElementById('user-diagram'));
+        let option = {
+            title: {
+                text: '入店率',
+                textStyle:{
+                    color: '#fff'
+                }
+            },
+            backgroundColor: '#404a59',
+            series: [{
+                type: 'liquidFill',
+                radius: '80%',
+                data: [0.6, {
+                    value: 0.5,
+                    direction: 'left',
+                    itemStyle: {
+                        normal: {
+                            color: 'red'
+                        }
+                    }
+                }, 0.4, 0.3]
+            }]
+        };
+        enterRatio.setOption(option);
+    }
+    drawUserDiagram(){
         // 绘制图表
-        console.log(userDiagramData);
+        //console.trace(userDiagramData);
         userDiagramDom.setOption( {
             title: {
                 text: '实时流量',
@@ -72,7 +112,7 @@ class Main extends Component {
                 trigger: 'axis'
             },
             xAxis: {
-                data: userDiagramData.map(function (item) {
+                data: this.state.userDiagramData.map(function (item) {
                     return item[0];
                 }),
                 axisLine:{
@@ -133,7 +173,7 @@ class Main extends Component {
                 name: '顾客流量',
                 left: 'center',
                 type: 'line',
-                data: userDiagramData.map(function (item) {
+                data: this.state.userDiagramData.map(function (item) {
                     return item[1];
                 }),
                 markLine: {
@@ -155,7 +195,6 @@ class Main extends Component {
     }
 
     drawBounceRate(){
-        bounceRateDom = echarts.init(document.getElementById('bounce-rate'));
         bounceRateDom.setOption({
             title:{
                 text:'顾客比例',
@@ -213,7 +252,7 @@ class Main extends Component {
     }
 
     drawEnterRate(){
-        enterRate = echarts.init(document.getElementById('enter-rate'));
+
         enterRate.setOption({
             title:{
                 text:'入店率',
@@ -279,20 +318,26 @@ class Main extends Component {
             userDiagramDom.resize();
             enterRate.resize();
             bounceRateDom.resize();
+            enterRatio.resize();
         }.bind(this);
 
     }
     componentDidMount() {
         this.autoResize();
+        userDiagramDom = echarts.init(document.getElementById('user-diagram'));
+        bounceRateDom = echarts.init(document.getElementById('bounce-rate'));
+        enterRate = echarts.init(document.getElementById('enter-rate'));
+        enterRatio = echarts.init(document.getElementById('enter-ratio'));
         this.drawUserDiagram();
         this.drawBounceRate();
         this.drawEnterRate();
+        this.drawEnterRatio();
         if ('WebSocket' in window) {
             webSocket = new WebSocket("ws://localhost:8080/websocket");
             webSocket.onerror = () =>{
             };
             webSocket.onopen = () =>{
-                alert('WebSocket Open');
+                //alert('WebSocket Open');
             };
             webSocket.onmessage = (data) =>{
                 console.log('receive data');
@@ -307,9 +352,13 @@ class Main extends Component {
             alert('当前浏览器 Not support websocket')
         }
     }
-
     componentWillMount(){
-
+    }
+    componentDidUpdate() {
+        this.drawUserDiagram();
+        this.drawBounceRate();
+        this.drawEnterRate();
+        this.drawEnterRatio();
     }
 
     next() {
@@ -322,6 +371,7 @@ class Main extends Component {
         this.setState({ current });
     }
 	render() {
+
         let linkHtml = '<link href="/antd/dist/app.css" rel="stylesheet" />';
         const steps = [{
           title: '下载',
@@ -339,7 +389,16 @@ class Main extends Component {
             <Bcrumb title="实时流量" />
             <Row>
             	<Col span={24}>
-                    <Col span={24}>
+                    <Col span={8}>
+                        <Card title="入店率" id="enter-ratio"/>
+                    </Col>
+                    <Col span={8}>
+                        <Card title="深访率" id="deep-access-ratio"/>
+                    </Col>
+                    <Col span={8}>
+                        <Card title="跳出率" id="jump-ratio"/>
+                    </Col>
+                    <Col span={24} className="mg-top10">
                         <Card title="用户" id="user-diagram"/>
                     </Col>
                     <Col span={12} className="mg-top10">
