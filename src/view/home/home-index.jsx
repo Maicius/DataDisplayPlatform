@@ -12,7 +12,6 @@ import { Bcrumb } from '../../component/bcrumb/bcrumb';
 import styles from './style/home.less';
 
 import { Icon, Row, Col, Card, Steps, Button, message } from 'antd';
-const Step = Steps.Step;
 let userDiagramDom;
 let enterRate, checkInRatio, deepAccessRatio, jumpRatio;
 let bounceRateDom;
@@ -37,14 +36,6 @@ class Main extends Component {
         userDiagram.style.width = '100%';
         userDiagram.style.height = '500px';
 
-        let bounceRate = document.getElementById('bounce-rate');
-        bounceRate.style.width = '100%';
-        bounceRate.style.height = '500px';
-
-        let enterRate = document.getElementById('enter-rate');
-        enterRate.style.width = '100%';
-        enterRate.style.height = '500px';
-
         let enterRatio = document.getElementById('enter-ratio');
         enterRatio.style.width = '100%';
         enterRatio.style.height = '300px';
@@ -68,7 +59,7 @@ class Main extends Component {
         this.state.userDiagramData.push(newData);
         this.state.checkInRatio = data.checkInRatio;
         this.state.checkInFlow.push(data.checkInFlow);
-        this.state.deepAccessRatio = data.deepAccessRatio;
+        this.state.deepAccessRatio = data.deepVisitRatio;
         this.state.jumpRatio = data.jumpRatio;
         this.setState({ userDiagramData: this.state.userDiagramData,
                         checkInRatio:this.state.checkInRatio,
@@ -320,149 +311,23 @@ class Main extends Component {
                 }]
 
         });
-    }
-
-    drawBounceRate(){
-        bounceRateDom.setOption({
-            title:{
-                text:'顾客比例',
-                left: 'center',
-                textStyle:{
-                    color: '#fff'
-                }
-            },
-            backgroundColor: backColor,
-            visualMap: {
-                show: false,
-                min: 80,
-                max: 600,
-                inRange: {
-                    colorLightness: [0, 1]
-                }
-            },
-            series : [
-                {
-                    name: '访问来源',
-                    type: 'pie',
-                    radius: '55%',
-                    data:[
-                        {value:235, name:'视频广告'},
-                        {value:274, name:'联盟广告'},
-                        {value:310, name:'邮件营销'},
-                        {value:335, name:'直接访问'},
-                        {value:400, name:'搜索引擎'}
-                    ],
-                    roseType: 'angle',
-                    label: {
-                        normal: {
-                            textStyle: {
-                                color: '#fff'
-                            }
-                        }
-                    },
-                    labelLine: {
-                        normal: {
-                            lineStyle: {
-                                color: '#fff'
-                            }
-                        }
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: '#1f8bc2',
-                            shadowBlur: 200,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
-                }
-            ]
-        });
-    }
-
-    drawEnterRate(){
-
-        enterRate.setOption({
-            title:{
-                text:'入店率',
-                left:'center',
-                textStyle:{
-                    color: '#fff'
-                }
-            },
-            backgroundColor: backColor,
-            tooltip: {
-                trigger: 'item',
-                formatter: "{a} <br/>{b}: {c} ({d}%)"
-            },
-            legend: {
-                orient: 'vertical',
-                x: 'left',
-                data:['直达','营销广告','搜索引擎','邮件营销','联盟广告','视频广告','百度','谷歌','必应','其他']
-            },
-            series: [
-                {
-                    name:'访问来源',
-                    type:'pie',
-                    selectedMode: 'single',
-                    radius: [0, '30%'],
-
-                    label: {
-                        normal: {
-                            position: 'inner'
-                        }
-                    },
-                    labelLine: {
-                        normal: {
-                            show: false
-                        }
-                    },
-                    data:[
-                        {value:335, name:'直达', selected:true},
-                        {value:679, name:'营销广告'},
-                        {value:1548, name:'搜索引擎'}
-                    ]
-                },
-                {
-                    name:'访问来源',
-                    type:'pie',
-                    radius: ['40%', '55%'],
-
-                    data:[
-                        {value:335, name:'直达'},
-                        {value:310, name:'邮件营销'},
-                        {value:234, name:'联盟广告'},
-                        {value:135, name:'视频广告'},
-                        {value:1048, name:'百度'},
-                        {value:251, name:'谷歌'},
-                        {value:147, name:'必应'},
-                        {value:102, name:'其他'}
-                    ]
-                }
-            ]
-            }
-        );
         window.onresize = function () {
             this.autoResize();
             userDiagramDom.resize();
-            enterRate.resize();
-            bounceRateDom.resize();
             checkInRatio.resize();
             jumpRatio.resize();
             deepAccessRatio.resize();
         }.bind(this);
-
     }
+
+
     componentDidMount() {
         this.autoResize();
         userDiagramDom = echarts.init(document.getElementById('user-diagram'));
-        bounceRateDom = echarts.init(document.getElementById('bounce-rate'));
-        enterRate = echarts.init(document.getElementById('enter-rate'));
         checkInRatio = echarts.init(document.getElementById('enter-ratio'));
         deepAccessRatio = echarts.init(document.getElementById('deep-access-ratio'));
         jumpRatio = echarts.init(document.getElementById('jump-ratio'));
         this.drawUserDiagram();
-        this.drawBounceRate();
-        this.drawEnterRate();
         this.drawCheckInRatio();
         this.drawDeepAccessRatio();
         this.drawJumpRatio();
@@ -486,43 +351,16 @@ class Main extends Component {
             alert('当前浏览器 Not support websocket')
         }
     }
-    // shouldComponentUpdate(){}
     componentDidUpdate() {
         this.drawUserDiagram();
-        this.drawBounceRate();
-        this.drawEnterRate();
         this.drawCheckInRatio();
+        this.drawDeepAccessRatio();
+        this.drawJumpRatio();
     }
-    componentShouldUpdate(){
 
-    }
-
-    next() {
-        console.log("next");
-        const current = this.state.current + 1;
-        this.setState({ current });
-    }
-    prev() {
-        const current = this.state.current - 1;
-        this.setState({ current });
-    }
 	render() {
-
-        let linkHtml = '<link href="/antd/dist/app.css" rel="stylesheet" />';
-        const steps = [{
-          title: '下载',
-          content: '<p>$&nbsp;&nbsp;&nbsp;git clone</p><p>$&nbsp;&nbsp;&nbsp;git clone https://github.com/sosout/react-antd.git</p><p>$&nbsp;&nbsp;&nbsp;cd react-antd</p>',
-        }, {
-          title: '安装',
-          content: '<p>// 安装前请先确保已安装node和npm</p><p>// 需要提前在全局安装webpack和webpack-dev-server,如果已安装请忽略</p><p>$&nbsp;&nbsp;&nbsp;npm install webpack -g</p><p>$&nbsp;&nbsp;&nbsp;npm install webpack-dev-server -g</p><p>// 安装成功后,再安装依赖</p><p>$&nbsp;&nbsp;&nbsp;npm install</p>',
-        }, {
-          title: '运行',
-          content: '<p>$&nbsp;&nbsp;&nbsp;npm run dev （正常编译模式，注意：index.html里必须手动引用app.css，{linkHtml}，否则没有样式）</p><p>$&nbsp;&nbsp;&nbsp;npm run hot （热替换编译模式，注意：热替换模式下index.html里去掉引用app.css）</p><p>$&nbsp;&nbsp;&nbsp;npm run dist （发布生产版本，对代码进行混淆压缩，提取公共代码，分离css文件）</p>',
-        }];
-        const current = this.state.current;
 		return (
-        <div className="home-container">
-            <Bcrumb title="实时流量" />
+        <div className="home-container mg-top20">
             <Row>
             	<Col span={24}>
                     <Col span={8}>
@@ -534,14 +372,8 @@ class Main extends Component {
                     <Col span={8}>
                         <Card title="跳出率" id="jump-ratio"/>
                     </Col>
-                    <Col span={24} className="mg-top10">
+                    <Col span={24} className="mg-top20">
                         <Card title="用户" id="user-diagram"/>
-                    </Col>
-                    <Col span={12} className="mg-top10">
-                        <Card title="跳出率" id="bounce-rate"/>
-                    </Col>
-                    <Col span={12} className="mg-top10">
-                        <Card title="入店率" id="enter-rate"/>
                     </Col>
                 </Col>
             </Row>

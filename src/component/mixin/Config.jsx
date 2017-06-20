@@ -2,7 +2,7 @@ const Main = {
 	target: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080/' : 'http://localhost:8080/', //目标网站
     name: 'Ant Design Admin',
     prefix: 'antdAdmin',
-    footerText: 'Ant Design Admin 版权所有 © 2017 由 川行团队 支持',
+    footerText: '川行 版权所有 © 2017 All Rights Reserved',
     logoSrc: 'https://t.alipayobjects.com/images/rmsweb/T1B9hfXcdvXXXXXXXX.svg',
     logoText: 'Antd Admin',
     needLogin: true,

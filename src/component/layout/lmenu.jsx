@@ -50,14 +50,14 @@ export class Lmenu extends Component {
 		              {!this.props.collapsed && <span className="nav-text">实时流量</span>}
 		            </Link>
 	            </Menu.Item>
-	            <SubMenu key="general" title={<span><Icon type="team" /><span className="nav-text">用户分析</span></span>}>
+	            <SubMenu key="general" title={<span><Icon type="team" /><span className="nav-text">商业分析</span></span>}>
 	              <Menu.Item key="button"><Link to="/general/button">用户列表</Link></Menu.Item>
-	              <Menu.Item key="icon"><Link to="/general/icon">活跃用户</Link></Menu.Item>
+	              <Menu.Item key="icon"><Link to="/general/icon">数据一览</Link></Menu.Item>
 	            </SubMenu>
 	            <Menu.Item key="setting">
 	            <Link to="/setting">
-	              <Icon type="setting" />
-	              {!this.props.collapsed && <span className="nav-text">店铺管理</span>}
+	              <Icon type="star-o" />
+	              {!this.props.collapsed && <span className="nav-text">智能决策</span>}
 	            </Link>
 	            </Menu.Item>
 	            <Menu.Item key="adver">

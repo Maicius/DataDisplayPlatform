@@ -57,14 +57,14 @@ const button = (location, cb) => {
 // 基础组件-图标
 const icon = (location, cb) => {
     require.ensure([], require => {
-        cb(null, require('../view/general/icon-index').default)
+        cb(null, require('../view/general/allDataView').default)
     }, 'icon');
 }
 
 // 系统设置
 const setting = (location, cb) => {
     require.ensure([], require => {
-        cb(null, require('../view/setting/setting-index').default)
+        cb(null, require('../view/setting/storeAnaly').default)
     }, 'setting');
 }
 
