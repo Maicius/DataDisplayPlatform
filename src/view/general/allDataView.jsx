@@ -7,7 +7,7 @@ import {Bcrumb} from "../../component/bcrumb/bcrumb";
 import echarts from 'echarts';
 /* 以类的方式创建一个组件 */
 
-let echartDom;
+let echartDom, customRatio, stayTime, monthlyFlow;
 let backColor = '#404a59';
 let data;
 class Main extends Component {
@@ -22,9 +22,22 @@ class Main extends Component {
         return !is(fromJS(this.props), fromJS(nextProps)) || !is(fromJS(this.state),fromJS(nextState))
     }
     autoResize(){
-        let dom = document.getElementById('allDataView');
+        let dom = document.getElementById('CalendarView');
         dom.style.width='100%';
-        dom.style.height='80vh';
+        dom.style.height='400px';
+
+        dom= document.getElementById('customRatio');
+        dom.style.width='100%';
+        dom.style.height='400px';
+
+        dom= document.getElementById('stayTime');
+        dom.style.width='100%';
+        dom.style.height='400px';
+
+        dom= document.getElementById('monthlyFlow');
+        dom.style.width='100%';
+        dom.style.height='400px';
+
     }
 
     getVirtulData(year) {
@@ -43,17 +56,91 @@ class Main extends Component {
         return data;
     }
 
-
-    drawDataView(){
-        data = this.getVirtulData(2016);
+    drawCustomerRatio(){
         let option = {
-            backgroundColor: '#404a59',
+            backgroundColor: backColor,
 
             title: {
-                top: 30,
-                text: '2016年某人每天的步数',
-                subtext: '数据纯属虚构',
+                text: 'Customized Pie',
                 left: 'center',
+                top: 20,
+                textStyle: {
+                    color: '#ccc'
+                }
+            },
+
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+
+            visualMap: {
+                show: false,
+                min: 80,
+                max: 600,
+                inRange: {
+                    colorLightness: [0, 1]
+                }
+            },
+            series : [
+                {
+                    name:'访问来源',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '50%'],
+                    data:[
+                        {value:335, name:'直接访问'},
+                        {value:310, name:'邮件营销'},
+                        {value:274, name:'联盟广告'},
+                        {value:235, name:'视频广告'},
+                        {value:400, name:'搜索引擎'}
+                    ].sort(function (a, b) { return a.value - b.value; }),
+                    roseType: 'area',
+                    label: {
+                        normal: {
+                            textStyle: {
+                                color: 'rgba(255, 255, 255, 0.3)'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            lineStyle: {
+                                color: 'rgba(255, 255, 255, 0.3)'
+                            },
+                            smooth: 0.2,
+                            length: 10,
+                            length2: 20
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#00BFFF',
+                            shadowBlur: 200,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+
+                    animationType: 'scale',
+                    animationEasing: 'elasticOut',
+                    animationDelay: function (idx) {
+                        return Math.random() * 200;
+                    }
+                }
+            ]
+        };
+        customRatio.setOption(option);
+    }
+
+    drawDataView(){
+        const mgLeft = 100;
+        const mgTop = 10;
+        data = this.getVirtulData(2016);
+        //console.log(data);
+        let option = {
+            backgroundColor: backColor,
+            title: {
+                text: '最近一年的顾客入店流量(/人次)',
                 textStyle: {
                     color: '#fff'
                 }
@@ -62,17 +149,21 @@ class Main extends Component {
                 trigger: 'item'
             },
             legend: {
-                top: '30',
-                left: '100',
                 data:['步数', 'Top 12'],
                 textStyle: {
                     color: '#fff'
                 }
             },
             calendar: [{
-                top: 100,
-                left: 'center',
+                top: mgTop+60,
+                left: mgLeft,
                 range: ['2016-01-01', '2016-06-30'],
+                monthLabel: {
+                    nameMap: 'cn',
+                    textStyle:{
+                        color:'#fff'
+                    }
+                },
                 splitLine: {
                     show: true,
                     lineStyle: {
@@ -95,8 +186,8 @@ class Main extends Component {
                     }
                 }
             }, {
-                top: 340,
-                left: 'center',
+                top: mgTop + 235,
+                left: mgLeft,
                 range: ['2016-07-01', '2016-12-31'],
                 splitLine: {
                     show: true,
@@ -104,6 +195,12 @@ class Main extends Component {
                         color: '#000',
                         width: 4,
                         type: 'solid'
+                    }
+                },
+                monthLabel: {
+                    nameMap: 'cn',
+                    textStyle:{
+                        color:'#fff'
                     }
                 },
                 yearLabel: {
@@ -122,7 +219,7 @@ class Main extends Component {
             }],
             series : [
                 {
-                    name: '步数',
+                    name: '人流量（/人次）',
                     type: 'scatter',
                     coordinateSystem: 'calendar',
                     data: data,
@@ -131,12 +228,12 @@ class Main extends Component {
                     },
                     itemStyle: {
                         normal: {
-                            color: '#ddb926'
+                            color: '#00BFFF'
                         }
                     }
                 },
                 {
-                    name: '步数',
+                    name: '人流量（/人次）',
                     type: 'scatter',
                     coordinateSystem: 'calendar',
                     calendarIndex: 1,
@@ -146,7 +243,7 @@ class Main extends Component {
                     },
                     itemStyle: {
                         normal: {
-                            color: '#ddb926'
+                            color: '#00BFFF'
                         }
                     }
                 },
@@ -201,24 +298,245 @@ class Main extends Component {
                 }
             ]
         };
+
         echartDom.setOption(option);
         window.onresize = function () {
             this.autoResize();
             echartDom.resize();
         }.bind(this);
     }
-    componentDidMount(){
-        echartDom = echarts.init(document.getElementById('allDataView'));
-        this.autoResize();
-        this.drawDataView();
+
+    drawStayTime(){
+        let option = {
+            backgroundColor: backColor,
+
+            title: {
+                text: 'Customized Pie',
+                left: 'center',
+                top: 20,
+                textStyle: {
+                    color: '#ccc'
+                }
+            },
+
+            tooltip : {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+
+            visualMap: {
+                show: false,
+                min: 80,
+                max: 600,
+                inRange: {
+                    colorLightness: [0, 1]
+                }
+            },
+            series : [
+                {
+                    name:'访问来源',
+                    type:'pie',
+                    radius : '55%',
+                    center: ['50%', '50%'],
+                    data:[
+                        {value:335, name:'直接访问'},
+                        {value:310, name:'邮件营销'},
+                        {value:274, name:'联盟广告'},
+                        {value:235, name:'视频广告'},
+                        {value:400, name:'搜索引擎'}
+                    ].sort(function (a, b) { return a.value - b.value; }),
+                    roseType: 'radius',
+                    label: {
+                        show:true,
+                        position:'inside',
+                        normal: {
+                            textStyle: {
+                                color: 'rgba(255, 255, 255, 0.3)'
+                            }
+                        }
+                    },
+                    labelLine: {
+                        normal: {
+                            lineStyle: {
+                                color: 'rgba(255, 255, 255, 0.3)'
+                            },
+                            smooth: 0.2,
+                            length: 10,
+                            length2: 20
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: '#00BFFF',
+                            shadowBlur: 200,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    },
+
+                    animationType: 'scale',
+                    animationEasing: 'elasticOut',
+                    animationDelay: function (idx) {
+                        return Math.random() * 200;
+                    }
+                }
+            ]
+        };
+        stayTime.setOption(option);
     }
 
+    drawMonthlyFlow(){
+        var dataAxis = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+        var data = [220, 182, 191, 234, 290, 330, 310, 123, 442, 321, 90, 149, 210, 122, 133, 334, 198, 123, 125, 220];
+        var yMax = 500;
+        var dataShadow = [];
+
+        for (var i = 0; i < data.length; i++) {
+            dataShadow.push(yMax);
+        }
+        let option = {
+            title: {
+                text: '平均每月人流量',
+                textStyle:{
+                    color:'#fff'
+                }
+            },
+            backgroundColor:backColor,
+            xAxis: {
+                data: dataAxis,
+                axisLabel: {
+                    inside: false,
+                    textStyle: {
+                        color: '#fff'
+                    }
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLine: {
+                    show: false
+                },
+                z: 10
+            },
+            yAxis: {
+                axisLine: {
+                    show: false
+                },
+                axisTick: {
+                    show: false
+                },
+                axisLabel: {
+                    textStyle: {
+                        color: '#999'
+                    }
+                }
+            },
+            dataZoom: [
+                {
+                    type: 'inside'
+                }
+            ],
+            series: [
+                { // For shadow
+                    type: 'bar',
+                    itemStyle: {
+                        normal: {color: 'rgba(0,0,0,0.05)'}
+                    },
+                    barGap:'-100%',
+                    barCategoryGap:'40%',
+                    data: dataShadow,
+                    animation: false
+                },
+                {
+                    type: 'bar',
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            color: new echarts.graphic.LinearGradient(
+                                0, 0, 0, 1,
+                                [
+                                    {offset: 0, color: '#83bff6'},
+                                    {offset: 0.5, color: '#188df0'},
+                                    {offset: 1, color: '#00BFFF'}
+                                ]
+                            )
+                        },
+                        emphasis: {
+                            color: new echarts.graphic.LinearGradient(
+                                0, 0, 0, 1,
+                                [
+                                    {offset: 0, color: '#2378f7'},
+                                    {offset: 0.7, color: '#2378f7'},
+                                    {offset: 1, color: '#00BFFF'}
+                                ]
+                            )
+                        }
+                    },
+                    data: data
+                }
+            ]
+        };
+        monthlyFlow.setOption(option);
+        // Enable data zoom when user click bar.
+        var zoomSize = 6;
+        monthlyFlow.on('click', function (params) {
+            console.log(dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)]);
+            monthlyFlow.dispatchAction({
+                type: 'dataZoom',
+                startValue: dataAxis[Math.max(params.dataIndex - zoomSize / 2, 0)],
+                endValue: dataAxis[Math.min(params.dataIndex + zoomSize / 2, data.length - 1)]
+            });
+        });
+    }
+
+    componentDidMount(){
+        this.autoResize();
+        echartDom = echarts.init(document.getElementById('CalendarView'));
+        customRatio = echarts.init(document.getElementById('customRatio'));
+        stayTime = echarts.init(document.getElementById('stayTime'));
+        monthlyFlow = echarts.init(document.getElementById('monthlyFlow'));
+        this.drawDataView();
+        this.drawCustomerRatio();
+        this.drawStayTime();
+        this.drawMonthlyFlow();
+    }
+    componentDidUpdate(){
+
+    }
 	render() {
+        const columns=[
+            {title:'开始时间', dataIndex:'start_time'},
+            {title:'截止时间', dataIndex:'end_time'}
+        ];
 
 		return(
             <div>
-                <Bcrumb title="数据一览"/>
-                <Card title="数据展示" id="allDataView"/>
+                <Row>
+                    <Bcrumb title="数据一览"/>
+                    <Col span={12}>
+                        <Table  columns={columns}/>
+                    </Col>
+                    <Col span={12}>
+                        <Card title="日历数据" id="CalendarView"/>
+                    </Col>
+
+                    <Col span={6}>
+                        <Card title="顾客比例" id="customRatio"/>
+                    </Col>
+                    <Col span={6}>
+                        <Card title="驻留时长" id="stayTime"/>
+                    </Col>
+                    <Col span={12}>
+                        <Card title="月人流量" id="monthlyFlow"/>
+                    </Col>
+
+                </Row>
+
+
             </div>
         );
 

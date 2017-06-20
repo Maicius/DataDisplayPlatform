@@ -277,6 +277,13 @@ class Main extends Component {
                 }),
                 markLine: {
                     silent: true,
+                    label:'区域流量',
+                    lineStyle:{
+                        normal:{
+                            width:3,
+                            type: 'dashed'
+                        }
+                    },
                     data: [{
                         yAxis: 50
                     }, {
@@ -293,9 +300,17 @@ class Main extends Component {
                     name: '入店流量',
                     left: 'center',
                     type: 'line',
+
                     data: this.state.checkInFlow,
                     markLine: {
                         silent: true,
+                        label:'入店流量',
+                        lineStyle:{
+                            normal:{
+                                width:3,
+                                type: 'dashed'
+                            }
+                        },
                         data: [{
                             yAxis: 50
                         }, {
