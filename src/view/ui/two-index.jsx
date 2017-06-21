@@ -19,28 +19,47 @@ class Main extends Component {
         }, {
             title: '商场名称',
             dataIndex: 'shop_name',
+            width:'10%',
             render: (text, record, index) => this.renderColumns(this.state.data, index, 'shop_name', text),
         }, {
             title: '商场地址',
             dataIndex: 'shop_address',
+            width:'10%',
             render: (text, record, index) => this.renderColumns(this.state.data, index, 'shop_address', text),
         },{
         	title:'负责人',
 			dataIndex:'shop_manager',
+            width:'10%',
             render: (text, record, index) => this.renderColumns(this.state.data, index, 'shop_manager', text),
 		},{
             title:'联系方式',
             dataIndex:'shop_telephone',
+            width:'10%',
             render: (text, record, index) => this.renderColumns(this.state.data, index, 'shop_telephone', text),
         },{
-        	title:'描述',
-			dataIndex:'description',
-			render: (text, record, index) =>this.renderColumns(this.state.data, index, 'description', text)
+        	title:'平均入店率',
+			dataIndex:'avg_enter_ratio',
+            width:'10%',
+            sorter: (a, b) => a.avg_enter_ratio - b.avg_enter_ratio,
+			render: (text, record, index) =>this.renderColumns(this.state.data, index, 'avg_enter_ratio', text)
 		},{
+            title:'平均驻店时长',
+            dataIndex:'avg_stay_time',
+            width:'10%',
+			sorter:(a, b) => a.avg_stay_time - b.avg_stay_time,
+            render: (text, record, index) =>this.renderColumns(this.state.data, index, 'avg_stay_time', text)
+        },{
+            title:'累计入店人次',
+            dataIndex:'total_enter_times',
+            width:'10%',
+			sorter:(a, b) => a.total_enter_times - b.total_enter_times,
+            render: (text, record, index) =>this.renderColumns(this.state.data, index, 'total_enter_times', text)
+        },{
         	title:'查看详情',
 			dataIndex:'viewDetail',
+            width:'10%',
             render:(text, record) =>(
-				<span><a href="#">查看{record.shop_name}</a></span>)
+				<span><a href="./monitorSetting">查看{record.shop_name}</a></span>)
 		}, {
             title: 'operation',
             dataIndex: 'operation',
@@ -87,6 +106,15 @@ class Main extends Component {
                     editable: false,
                     value:'189XXXXXXXXX'
                 },
+				avg_enter_ratio:{
+                	value: 0.7
+				},
+				avg_stay_time:{
+                	value: 30
+				},
+				total_enter_times:{
+                	value: 	10000
+				},
 				description:{
                 	editable: false,
                 	value:'It\'s a descrpition'
@@ -155,7 +183,8 @@ class Main extends Component {
         return (
         	<div>
         		<Bcrumb title="商场管理"/>
-        		<Table bordered dataSource={dataSource} columns={columns} />
+        		<Table bordered dataSource={dataSource} columns={columns}
+					   expandedRowRender={record => <p>{record.description}</p>}/>
 			</div>
 		);
     }

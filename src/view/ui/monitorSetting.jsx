@@ -76,18 +76,17 @@ class Main extends Component{
         const {selectedRowKeys } = this.state;
         const {current} = this.state;
         const shopColumns = [
-            {title:'商场ID', dataIndex:'shop_id'},
-            {title:'商场名称', dataIndex:'shop_name'},
-            {title:'商场地址', dataIndex: 'shop_address'},
-            {title:'联系方式', dataIndex:'telephone'},
-            {title:'负责人', dataIndex:'manager'},
-            {title:'描述', dataIndex:'description'},
-            {title:'操作', dataIndex: 'operation', render:(text, record) =>(
-                <span><a href="#">编辑{record.name}</a></span>)}
+            {title:'探针ID', dataIndex:'probe_id'},
+            {title:'位置', dataIndex:'address'},
+            {title:'开机时间', dataIndex: 'start_time'},
+            {title:'累计工作时长(/h)', dataIndex:'work_time'},
+            {title:'发送频率(/每秒)', dataIndex:'rate'},
+            {title:'工作状态', dataIndex:'work_state'},
+            {title:'累计发送数据', dataIndex: 'total_data'}
         ];
         const shopData = [
-            {key:1, shop_id:1, shop_name:'商业街', shop_address: '四川大学江安校区', telephone:'18030848307',
-            manager:'maicius', description:'It\'s a description' }
+            {key:1, probe_id:1, address:'商业街', start_time: '2017-01-01 00:00:00', work_time:30,
+            rate:3, work_state:'良好', total_data:100000}
         ];
         const rowSelection = {
             selectedRowKeys,
@@ -98,7 +97,7 @@ class Main extends Component{
 				<Bcrumb title="参数设置"/>
 				<Row>
 					<Col>
-						<Card title="项目上手" className="mg-top20" span={24}>
+						<Card title="项目上手" span={24}>
 							<Steps current={current}>
                                 {steps.map(item => <Step key={item.title} title={item.title} />)}
 							</Steps>
