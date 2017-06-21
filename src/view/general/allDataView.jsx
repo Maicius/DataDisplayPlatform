@@ -2,12 +2,13 @@ import React, { Component, PropTypes } from 'react'; // 引入了React和PropTyp
 import { connect } from 'react-redux';
 import { is, fromJS } from 'immutable';
 import { RenderData } from '../../component/mixin';
-import { Icon, Row, Col, Card, Button, Radio, Table } from 'antd';
+import { Icon, Row, Col, Card, Button, Radio, Table, DatePicker} from 'antd';
+import moment from 'moment';
 import {Bcrumb} from "../../component/bcrumb/bcrumb";
 import echarts from 'echarts';
 /* 以类的方式创建一个组件 */
 
-let echartDom, customRatio, stayTime, monthlyFlow;
+let echartDom, customRatio, stayTime, monthlyFlow, dailyUser;
 let backColor = '#404a59';
 let data;
 class Main extends Component {
@@ -35,6 +36,10 @@ class Main extends Component {
         dom.style.height='400px';
 
         dom= document.getElementById('monthlyFlow');
+        dom.style.width='100%';
+        dom.style.height='400px';
+
+        dom= document.getElementById('dailyUser');
         dom.style.width='100%';
         dom.style.height='400px';
 
@@ -140,7 +145,8 @@ class Main extends Component {
         let option = {
             backgroundColor: backColor,
             title: {
-                text: '最近一年的顾客入店流量(/人次)',
+                text: '用户活跃日历',
+                left:'center',
                 textStyle: {
                     color: '#fff'
                 }
@@ -149,15 +155,17 @@ class Main extends Component {
                 trigger: 'item'
             },
             legend: {
+                left:'left',
+                show: true,
                 data:['步数', 'Top 12'],
                 textStyle: {
                     color: '#fff'
                 }
             },
             calendar: [{
-                top: mgTop+60,
-                left: mgLeft,
-                range: ['2016-01-01', '2016-06-30'],
+                top: 'center',
+                left: 'center',
+                range: ['2016-01-01', '2016-12-31'],
                 monthLabel: {
                     nameMap: 'cn',
                     textStyle:{
@@ -173,38 +181,7 @@ class Main extends Component {
                     }
                 },
                 yearLabel: {
-                    formatter: '{start}  1st',
-                    textStyle: {
-                        color: '#fff'
-                    }
-                },
-                itemStyle: {
-                    normal: {
-                        color: '#323c48',
-                        borderWidth: 1,
-                        borderColor: '#111'
-                    }
-                }
-            }, {
-                top: mgTop + 235,
-                left: mgLeft,
-                range: ['2016-07-01', '2016-12-31'],
-                splitLine: {
-                    show: true,
-                    lineStyle: {
-                        color: '#000',
-                        width: 4,
-                        type: 'solid'
-                    }
-                },
-                monthLabel: {
-                    nameMap: 'cn',
-                    textStyle:{
-                        color:'#fff'
-                    }
-                },
-                yearLabel: {
-                    formatter: '{start}  2nd',
+                    formatter: '{start}',
                     textStyle: {
                         color: '#fff'
                     }
@@ -231,46 +208,6 @@ class Main extends Component {
                             color: '#00BFFF'
                         }
                     }
-                },
-                {
-                    name: '人流量（/人次）',
-                    type: 'scatter',
-                    coordinateSystem: 'calendar',
-                    calendarIndex: 1,
-                    data: data,
-                    symbolSize: function (val) {
-                        return val[1] / 500;
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: '#00BFFF'
-                        }
-                    }
-                },
-                {
-                    name: 'Top 12',
-                    type: 'effectScatter',
-                    coordinateSystem: 'calendar',
-                    calendarIndex: 1,
-                    data: data.sort(function (a, b) {
-                        return b[1] - a[1];
-                    }).slice(0, 12),
-                    symbolSize: function (val) {
-                        return val[1] / 500;
-                    },
-                    showEffectOn: 'render',
-                    rippleEffect: {
-                        brushType: 'stroke'
-                    },
-                    hoverAnimation: true,
-                    itemStyle: {
-                        normal: {
-                            color: '#f4e925',
-                            shadowBlur: 10,
-                            shadowColor: '#333'
-                        }
-                    },
-                    zlevel: 1
                 },
                 {
                     name: 'Top 12',
@@ -306,16 +243,185 @@ class Main extends Component {
         }.bind(this);
     }
 
+    drawDailyUsers(){
+
+        let option = {
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            backgroundColor:backColor,
+
+            legend: {
+                data:['直接访问','邮件营销','联盟广告','视频广告','搜索引擎','百度','谷歌','必应','其他'],
+                textStyle:{
+                    color:'#fff'
+                }
+            },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis : [
+                {   left:'center',
+                    top:'center',
+                    type : 'category',
+                    data : ['周一','周二','周三','周四','周五','周六','周日','周一','周二','周三','周四','周五','周六','周日',
+                        '周一','周二','周三','周四','周五','周六','周日','周一','周二','周三','周四'],
+                    axisLine:{
+                        lineStyle:{
+                            color:'#fff'
+                        }
+                    }
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    axisLine:{
+                        lineStyle:{
+                            color:'#fff'
+                        }
+                    }
+                }
+            ],
+            series : [
+                {
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    name:'直接访问',
+                    type:'bar',
+                    data:[320, 332, 301, 334, 390, 330, 320]
+                },
+                {
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    name:'邮件营销',
+                    type:'bar',
+                    stack: '广告',
+                    data:[120, 132, 101, 134, 90, 230, 210]
+                },
+                {
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    name:'联盟广告',
+                    type:'bar',
+                    stack: '广告',
+                    data:[220, 182, 191, 234, 290, 330, 310]
+                },
+                {
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    name:'视频广告',
+                    type:'bar',
+                    stack: '广告',
+                    data:[150, 232, 201, 154, 190, 330, 410]
+                },
+                {
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    name:'搜索引擎',
+                    type:'bar',
+                    data:[862, 1018, 964, 1026, 1679, 1600, 1570],
+                    markLine : {
+                        lineStyle: {
+                            normal: {
+                                type: 'dashed'
+                            }
+                        },
+                        data : [
+                            [{type : 'min'}, {type : 'max'}]
+                        ]
+                    }
+                },
+                {
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    name:'百度',
+                    type:'bar',
+                    barWidth : 5,
+                    stack: '搜索引擎',
+                    data:[620, 732, 701, 734, 1090, 1130, 1120]
+                },
+                {
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    name:'谷歌',
+                    type:'bar',
+                    stack: '搜索引擎',
+                    data:[120, 132, 101, 134, 290, 230, 220]
+                },
+                {
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    name:'必应',
+                    type:'bar',
+                    stack: '搜索引擎',
+                    data:[60, 72, 71, 74, 190, 130, 110]
+                },
+                {
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    name:'其他',
+                    type:'bar',
+                    stack: '搜索引擎',
+                    data:[62, 82, 91, 84, 109, 110, 120]
+                }
+            ]
+        };
+        dailyUser.setOption(option);
+    }
+
     drawStayTime(){
         let option = {
             backgroundColor: backColor,
 
             title: {
-                text: 'Customized Pie',
+                text: '来访顾客平均时长占比',
                 left: 'center',
                 top: 20,
                 textStyle: {
-                    color: '#ccc'
+                    color: '#fff'
                 }
             },
 
@@ -339,11 +445,11 @@ class Main extends Component {
                     radius : '55%',
                     center: ['50%', '50%'],
                     data:[
-                        {value:335, name:'直接访问'},
-                        {value:310, name:'邮件营销'},
-                        {value:274, name:'联盟广告'},
-                        {value:235, name:'视频广告'},
-                        {value:400, name:'搜索引擎'}
+                        {value:335, name:'大于3 hour'},
+                        {value:310, name:'1 hour -- 3 hour'},
+                        {value:274, name:'30 min--1 hour'},
+                        {value:235, name:'10 min--30 min'},
+                        {value:400, name:'小于 10 min'}
                     ].sort(function (a, b) { return a.value - b.value; }),
                     roseType: 'radius',
                     label: {
@@ -499,39 +605,83 @@ class Main extends Component {
         customRatio = echarts.init(document.getElementById('customRatio'));
         stayTime = echarts.init(document.getElementById('stayTime'));
         monthlyFlow = echarts.init(document.getElementById('monthlyFlow'));
+        dailyUser = echarts.init(document.getElementById('dailyUser'));
         this.drawDataView();
         this.drawCustomerRatio();
         this.drawStayTime();
         this.drawMonthlyFlow();
+        this.drawDailyUsers();
     }
+
     componentDidUpdate(){
 
     }
+
 	render() {
         const columns=[
             {title:'开始时间', dataIndex:'start_time'},
             {title:'截止时间', dataIndex:'end_time'}
         ];
-
+        const { MonthPicker, RangePicker } = DatePicker;
+        const dateFormat = 'YYYY/MM/DD';
+        const monthFormat = 'YYYY/MM';
 		return(
             <div>
                 <Row>
                     <Bcrumb title="数据一览"/>
-                    <Col span={12}>
-                        <Table  columns={columns}/>
+                    <Col span={4}>
+                        <div className="mg-left10">
+                            <RangePicker
+                                defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
+                                format={dateFormat}
+                            />
+                            <Table columns={columns} className="mg-top20"/>
+                        </div>
                     </Col>
-                    <Col span={12}>
-                        <Card title="日历数据" id="CalendarView"/>
+                    <Col span={20}>
+                        <Card title="日历数据" id="CalendarView" className="mg-left10"/>
                     </Col>
 
-                    <Col span={6}>
-                        <Card title="顾客比例" id="customRatio"/>
+                    <Col span={4}>
+                        <div className="mg-left10">
+                            <RangePicker
+                                defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
+                                format={dateFormat}
+                            />
+                            <Table columns={columns} className="mg-top20"/>
+                        </div>
                     </Col>
-                    <Col span={6}>
+                    <Col span={20}>
+                        <Card title="月人流量" id="monthlyFlow" className="mg-left10"/>
+                    </Col>
+
+                    <Col span={4}>
+                        <div className="mg-left10">
+                            <RangePicker
+                                defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
+                                format={dateFormat}
+                            />
+                            <Table columns={columns} className="mg-top20"/>
+                        </div>
+                    </Col>
+                    <Col span={20}>
+                        <Card title="每日活跃日志" id="dailyUser" className="mg-left10"/>
+                    </Col>
+
+                    <Col span={4}>
+                        <div className="mg-left10">
+                            <RangePicker
+                                defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
+                                format={dateFormat}
+                            />
+                            <Table columns={columns} className="mg-top20"/>
+                        </div>
+                    </Col>
+                    <Col span={10}>
+                        <Card title="顾客比例" id="customRatio" className="mg-left10"/>
+                    </Col>
+                    <Col span={10}>
                         <Card title="驻留时长" id="stayTime"/>
-                    </Col>
-                    <Col span={12}>
-                        <Card title="月人流量" id="monthlyFlow"/>
                     </Col>
 
                 </Row>
