@@ -70,9 +70,9 @@ class Main extends Component {
                         {
                             editable ?
 								<span>
-                  <a onClick={() => this.editDone(index, 'save')}>Save</a>
+                  <a onClick={() => this.editDone(index, 'save')}>保存</a>
                   <Popconfirm title="Sure to cancel?" onConfirm={() => this.editDone(index, 'cancel')}>
-                    <a>Cancel</a>
+                    <a>取消</a>
                   </Popconfirm>
                 </span>
                                 :

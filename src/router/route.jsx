@@ -85,7 +85,7 @@ const monitorSetting = (location, cb) => {
 // 组件二
 const twoui = (location, cb) => {
     require.ensure([], require => {
-        cb(null, require('../view/ui/two-index').default)
+        cb(null, require('../view/ui/shop_manager').default)
     }, 'twoui');
 }
 

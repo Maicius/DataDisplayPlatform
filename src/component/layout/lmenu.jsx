@@ -67,10 +67,10 @@ export class Lmenu extends Component {
 	            </Link>
 	            </Menu.Item>
 	            <SubMenu
-	              key="sub1" title={<span><Icon type="cloud" /><span className="nav-text">历史数据</span></span>}
+	              key="sub1" title={<span><Icon type="cloud" /><span className="nav-text">商场管理</span></span>}
 	            >
-	              <Menu.Item key="oneui"><Link to="/ui/monitorSetting">用户</Link></Menu.Item>
-	              <Menu.Item key="twoui"><Link to="/ui/twoui">店铺</Link></Menu.Item>
+	              <Menu.Item key="oneui"><Link to="/ui/monitorSetting">参数设置</Link></Menu.Item>
+	              <Menu.Item key="twoui"><Link to="/ui/twoui">商场详情</Link></Menu.Item>
 	            </SubMenu>
 	        </Menu>
 		)
