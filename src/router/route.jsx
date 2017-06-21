@@ -55,10 +55,10 @@ const button = (location, cb) => {
 }
 
 // 基础组件-图标
-const icon = (location, cb) => {
+const allDataView = (location, cb) => {
     require.ensure([], require => {
         cb(null, require('../view/general/allDataView').default)
-    }, 'icon');
+    }, 'allDataView');
 }
 
 // 系统设置
@@ -76,10 +76,10 @@ const adver = (location, cb) => {
 }
 
 // 组件一
-const oneui = (location, cb) => {
+const monitorSetting = (location, cb) => {
     require.ensure([], require => {
-        cb(null, require('../view/ui/one-index').default)
-    }, 'oneui');
+        cb(null, require('../view/ui/monitorSetting').default)
+    }, 'monitorSetting');
 }
 
 // 组件二
@@ -106,10 +106,10 @@ const RouteConfig = (
 			<IndexRoute getComponent={home} onEnter={requireAuth} /> // 默认加载的组件，比如访问www.test.com,会自动跳转到www.test.com/home
 			<Route path="/home" getComponent={home} onEnter={requireAuth} />
 			<Route path="/general/button" getComponent={button} onEnter={requireAuth} />
-			<Route path="/general/icon" getComponent={icon} onEnter={requireAuth} />
+			<Route path="/general/allDataView" getComponent={allDataView} onEnter={requireAuth} />
 			<Route path="/setting" getComponent={setting} onEnter={requireAuth} />
 			<Route path="/adver" getComponent={adver} onEnter={requireAuth} />
-			<Route path="/ui/oneui" getComponent={oneui} onEnter={requireAuth} />
+			<Route path="/ui/monitorSetting" getComponent={monitorSetting} onEnter={requireAuth} />
 			<Route path="/ui/twoui" getComponent={twoui} onEnter={requireAuth} />
 		</Route>
 		<Route path="/login" component={Roots}> // 所有的访问，都跳转到Roots

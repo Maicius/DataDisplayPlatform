@@ -52,7 +52,7 @@ export class Lmenu extends Component {
 	            </Menu.Item>
 	            <SubMenu key="general" title={<span><Icon type="team" /><span className="nav-text">商业分析</span></span>}>
 	              <Menu.Item key="button"><Link to="/general/button">用户列表</Link></Menu.Item>
-	              <Menu.Item key="icon"><Link to="/general/icon">数据一览</Link></Menu.Item>
+	              <Menu.Item key="allDataView"><Link to="/general/allDataView">数据一览</Link></Menu.Item>
 	            </SubMenu>
 	            <Menu.Item key="setting">
 	            <Link to="/setting">
@@ -69,13 +69,9 @@ export class Lmenu extends Component {
 	            <SubMenu
 	              key="sub1" title={<span><Icon type="cloud" /><span className="nav-text">历史数据</span></span>}
 	            >
-	              <Menu.Item key="oneui"><Link to="/ui/oneui">用户</Link></Menu.Item>
+	              <Menu.Item key="oneui"><Link to="/ui/monitorSetting">用户</Link></Menu.Item>
 	              <Menu.Item key="twoui"><Link to="/ui/twoui">店铺</Link></Menu.Item>
 	            </SubMenu>
-	            <SubMenu key="sub2" title={<span><Icon type="setting" /><span className="nav-text">探针设置</span></span>}>
-			          <Menu.Item key="9">Option 9</Menu.Item>
-			          <Menu.Item key="10">Option 10</Menu.Item>
-			    </SubMenu>
 	        </Menu>
 		)
 	}

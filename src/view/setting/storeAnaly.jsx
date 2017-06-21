@@ -156,6 +156,7 @@ class Main extends Component {
 }
 
 Main.contextTypes = {
+
 };
 
 export default RenderData({
