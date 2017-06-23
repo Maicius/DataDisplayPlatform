@@ -145,7 +145,7 @@ class Main extends Component {
         let option = {
             backgroundColor: backColor,
             title: {
-                text: '用户活跃日历',
+                text: '用户活跃年历',
                 left:'center',
                 textStyle: {
                     color: '#fff'
@@ -502,6 +502,7 @@ class Main extends Component {
         let option = {
             title: {
                 text: '平均每月人流量',
+                left: 'center',
                 textStyle:{
                     color:'#fff'
                 }
