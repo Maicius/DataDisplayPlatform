@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import {is, fromJS} from 'immutable';
 import {RenderData} from '../../component/mixin';
 import {Bcrumb} from "../../component/bcrumb/bcrumb";
+
 import EditableCell from '../../component/mixin/editableCell';
 import {Slider, InputNumber, Row, Col, Card, Button, Radio, Table, Steps, Form, Input} from 'antd';
 const Step = Steps.Step;

@@ -60,12 +60,12 @@ export class Lmenu extends Component {
 	              {!this.props.collapsed && <span className="nav-text">智能决策</span>}
 	            </Link>
 	            </Menu.Item>
-	            <Menu.Item key="adver">
-	            <Link to="/adver">
-	              <Icon type="notification" />
-	              {!this.props.collapsed && <span className="nav-text">广告管理</span>}
-	            </Link>
-	            </Menu.Item>
+	            {/*<Menu.Item key="adver">*/}
+	            {/*<Link to="/adver">*/}
+	              {/*<Icon type="notification" />*/}
+	              {/*{!this.props.collapsed && <span className="nav-text">广告管理</span>}*/}
+	            {/*</Link>*/}
+	            {/*</Menu.Item>*/}
 	            <SubMenu
 	              key="sub1" title={<span><Icon type="cloud" /><span className="nav-text">商场管理</span></span>}
 	            >

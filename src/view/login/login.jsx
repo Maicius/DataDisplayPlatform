@@ -78,7 +78,7 @@ class Login extends Component {
         this.setState({ loginSpinning: false });
     }
 	render() {
-		const { getFieldDecorator } = this.props.form;
+        const { getFieldDecorator } = this.props.form;
 		return (
 		<div className="login-container">	
 			<div className="login-form">

@@ -2,10 +2,12 @@ import React, { Component, PropTypes } from 'react'; // 引入了React和PropTyp
 import { connect } from 'react-redux';
 import { is, fromJS } from 'immutable';
 import { RenderData } from '../../component/mixin';
-import { Table, Input, Popconfirm } from 'antd';
+import { Table, Input, Popconfirm, Form, Col,Slider, InputNumber, Spin, message, Button, Row } from 'antd';
 import EditableCell from '../../component/mixin/editableCell';
+import Config from '../../component/mixin/Config';
 import {Bcrumb} from "../../component/bcrumb/bcrumb";
-
+import CollectionCreateForm from "../../component/mixin/ShopName"
+const FormItem = Form.Item;
 /* 以类的方式创建一个组件 */
 class Main extends Component {
 
@@ -85,6 +87,7 @@ class Main extends Component {
             },
         }];
         this.state = {
+            visible: false,
             data: [{
                 key: '0',
                 shop_id: {
@@ -104,7 +107,7 @@ class Main extends Component {
 				},
                 shop_telephone:{
                     editable: false,
-                    value:'189XXXXXXXXX'
+                    value:'18996720676'
                 },
 				avg_enter_ratio:{
                 	value: 0.7
@@ -170,6 +173,49 @@ class Main extends Component {
             });
         });
     }
+    showModal = () => {
+        this.setState({ visible: true });
+    }
+    handleCancel = () => {
+        this.setState({ visible: false });
+    }
+    handleCreate = () => {
+        const form = this.form;
+        form.validateFields((err, values) => {
+            if (!err) {
+                let shop_name = values.shop_name,
+                    shop_addr = values.shop_addr,
+                    shop_manager = values.shop_manager,
+                    shop_telephone = value.shop_telephone,
+                    shop_describe = value.shop_describe
+                    loginParams = {
+                        shop_name: shop_name,
+                        shop_addr: shop_addr,
+                        shop_manager: shop_manager,
+                        shop_telephone: shop_telephone,
+                        shop_describe: shop_describe
+                    };
+
+                this.props.getData('add_shop.action', loginParams, (res) =>{
+                    console.log(res);
+                    if(res !== ""){
+
+                    }
+                }, 'addShop', 'GET');
+                return;
+            }
+            console.log('Received values of form: ', values);
+            form.resetFields();
+            this.setState({ visible: false });
+        });
+    }
+    saveFormRef = (form) => {
+        this.form = form;
+    }
+    componentDidMount(){
+
+    }
+
     render() {
         const { data } = this.state;
         const dataSource = data.map((item) => {
@@ -180,14 +226,25 @@ class Main extends Component {
             return obj;
         });
         const columns = this.columns;
+
         return (
         	<div>
         		<Bcrumb title="商场管理"/>
         		<Table bordered dataSource={dataSource} columns={columns}
 					   expandedRowRender={record => <p>{record.description}</p>}/>
+                <div>
+                    <Button type="primary" onClick={this.showModal}>添加新商场</Button>
+                <CollectionCreateForm ref={this.saveFormRef}
+                                      visible={this.state.visible}
+                                      onCancel={this.handleCancel}
+                                      onCreate={this.handleCreate}/>
+                </div>
 			</div>
 		);
     }
+
+
+
 }
 
 

@@ -1,10 +1,12 @@
-import React, { Component, PropTypes } from 'react'; // 引入了React和PropTypes
+import React, { Component, PropTypes } from 'react';
+import echarts from 'echarts';
 import { connect } from 'react-redux';
 import { is, fromJS } from 'immutable';
 import { RenderData } from '../../component/mixin';
 import {Bcrumb} from "../../component/bcrumb/bcrumb";
 import { Icon, Row, Col, Card, Button, Radio, Table } from 'antd';
-let bounceRateDom, enterRate;
+let avgDailyUser;
+let backColor = '#404a59';
 /* 以类的方式创建一个组件 */
 class Main extends Component {
     constructor(props) {
@@ -13,139 +15,122 @@ class Main extends Component {
     shouldComponentUpdate(nextProps, nextState) {
         return !is(fromJS(this.props), fromJS(nextProps)) || !is(fromJS(this.state),fromJS(nextState))
     }
-    componentDidMount(){
-        bounceRateDom = echarts.init(document.getElementById('bounce-rate'));
-        enterRate = echarts.init(document.getElementById('enter-rate'));
-	}
-    drawBounceRate(){
-        bounceRateDom.setOption({
-            title:{
-                text:'顾客比例',
-                left: 'center',
-                textStyle:{
+    drawAvgDailyUsers(){
+
+        let option = {
+            tooltip : {
+                trigger: 'axis',
+                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+                }
+            },
+            title: {
+                text: '预测未来一天内流量情况',
+                left:'center',
+                textStyle: {
                     color: '#fff'
                 }
             },
-            backgroundColor: backColor,
-            visualMap: {
-                show: false,
-                min: 80,
-                max: 600,
-                inRange: {
-                    colorLightness: [0, 1]
+            backgroundColor:backColor,
+
+            legend: {
+                data:['客流量','入店量'],
+                left:'left',
+                textStyle:{
+                    color:'#fff'
                 }
             },
+            grid: {
+                left: '3%',
+                right: '4%',
+                bottom: '3%',
+                containLabel: true
+            },
+            xAxis : [
+                {   left:'center',
+                    top:'center',
+                    type : 'category',
+                    data : ['周一','周二','周三','周四','周五','周六','周日','周一','周二','周三','周四','周五','周六','周日',
+                        '周一','周二','周三','周四','周五','周六','周日','周一','周二','周三','周四'],
+                    axisLine:{
+                        lineStyle:{
+                            color:'#fff'
+                        }
+                    }
+                }
+            ],
+            yAxis : [
+                {
+                    type : 'value',
+                    axisLine:{
+                        lineStyle:{
+                            color:'#fff'
+                        }
+                    }
+                }
+            ],
             series : [
                 {
-                    name: '访问来源',
-                    type: 'pie',
-                    radius: '55%',
-                    data:[
-                        {value:235, name:'视频广告'},
-                        {value:274, name:'联盟广告'},
-                        {value:310, name:'邮件营销'},
-                        {value:335, name:'直接访问'},
-                        {value:400, name:'搜索引擎'}
-                    ],
-                    roseType: 'angle',
-                    label: {
-                        normal: {
-                            textStyle: {
-                                color: '#fff'
-                            }
-                        }
-                    },
-                    labelLine: {
-                        normal: {
-                            lineStyle: {
-                                color: '#fff'
-                            }
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
                         }
                     },
                     itemStyle: {
                         normal: {
-                            color: '#1f8bc2',
-                            shadowBlur: 200,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            color: new echarts.graphic.LinearGradient(
+                                0, 0, 0, 1,
+                                [
+                                    {offset: 0, color: '#83bff6'},
+                                    {offset: 0.5, color: '#188df0'},
+                                    {offset: 1, color: '#00BFFF'}
+                                ]
+                            )
                         }
-                    }
+                    },
+                    name:'客流量',
+                    type:'bar',
+                    data:[320, 332, 301, 334, 390, 330, 320]
+                },
+                {
+                    label:{
+                        normal:{
+                            show: true,
+                            position:'inside'
+                        }
+                    },
+                    name:'入店量',
+                    type:'bar',
+                    stack: '广告',
+                    data:[120, 132, 101, 134, 90, 230, 210]
                 }
             ]
-        });
+        };
+        avgDailyUser.setOption(option);
+        window.onresize = function () {
+            this.autoResize();
+            avgDailyUser.resize();
+        }.bind(this);
     }
-
-    drawEnterRate(){
-        enterRate.setOption({
-                title:{
-                    text:'入店率',
-                    left:'center',
-                    textStyle:{
-                        color: '#fff'
-                    }
-                },
-                backgroundColor: backColor,
-                tooltip: {
-                    trigger: 'item',
-                    formatter: "{a} <br/>{b}: {c} ({d}%)"
-                },
-                legend: {
-                    orient: 'vertical',
-                    x: 'left',
-                    data:['直达','营销广告','搜索引擎','邮件营销','联盟广告','视频广告','百度','谷歌','必应','其他']
-                },
-                series: [
-                    {
-                        name:'访问来源',
-                        type:'pie',
-                        selectedMode: 'single',
-                        radius: [0, '30%'],
-
-                        label: {
-                            normal: {
-                                position: 'inner'
-                            }
-                        },
-                        labelLine: {
-                            normal: {
-                                show: false
-                            }
-                        },
-                        data:[
-                            {value:335, name:'直达', selected:true},
-                            {value:679, name:'营销广告'},
-                            {value:1548, name:'搜索引擎'}
-                        ]
-                    },
-                    {
-                        name:'访问来源',
-                        type:'pie',
-                        radius: ['40%', '55%'],
-
-                        data:[
-                            {value:335, name:'直达'},
-                            {value:310, name:'邮件营销'},
-                            {value:234, name:'联盟广告'},
-                            {value:135, name:'视频广告'},
-                            {value:1048, name:'百度'},
-                            {value:251, name:'谷歌'},
-                            {value:147, name:'必应'},
-                            {value:102, name:'其他'}
-                        ]
-                    }
-                ]
-            }
-        );
-
-
+    componentDidMount(){
+        this.autoResize();
+        avgDailyUser = echarts.init(document.getElementById('avgDailyUser'));
+        this.drawAvgDailyUsers();
+	}
+    autoResize(){
+        let avgDailyUser = document.getElementById('avgDailyUser');
+        avgDailyUser.style.height = '80vh';
+        avgDailyUser.style.width = '100%';
     }
 
 	render() {
 		return (	
 		<div className="mg-top10">
             <Row>
-			    <Bcrumb title="店铺分析"/>
+			    <Bcrumb title="智能决策"/>
                 <Col span={24}>
-                    <Card title="顾客比例">
+                    <Card title="avgDailyUser" id="avgDailyUser">
 
                     </Card>
                 </Col>

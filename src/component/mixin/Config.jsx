@@ -1,17 +1,18 @@
 const Main = {
 	target: process.env.NODE_ENV !== 'production' ? 'http://localhost:8080/' : 'http://localhost:8080/', //目标网站
-    name: 'Ant Design Admin',
-    prefix: 'antdAdmin',
+    name: 'WIFI Probe Admin',
+    prefix: 'Probe Admin',
     footerText: '川行 版权所有 © 2017 All Rights Reserved',
     logoSrc: 'https://t.alipayobjects.com/images/rmsweb/T1B9hfXcdvXXXXXXXX.svg',
-    logoText: 'Antd Admin',
+    logoText: 'Probe Admin',
     needLogin: true,
 	message: { // 提示信息
 		usernameInput: '请输入用户名',
         usernameEng: '用户名必须是字母',
 		passwordInput: '请输入密码',
 		verifyCodeInput: '请输入验证码',
-		loginError: '用户名或者密码错误!'
+		loginError: '用户名或者密码错误!',
+		shopNameInput: '请输入商场名称'
 	},
 	localKey: { // 本地存储Key
 		userToken: 'USER_AUTHORIZATION'
