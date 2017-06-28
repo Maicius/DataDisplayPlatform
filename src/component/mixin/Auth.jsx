@@ -6,7 +6,7 @@
  */
 const pretendRequest = (username, password, cb) => {
 	setTimeout(() => {
-		if(username === 'maicius' && password === '110110') {
+		if(username === '18996720676' && password === '110110') {
 			cb({
 				authenticated: true,
 				token: Math.random().toString(36).substring(7)

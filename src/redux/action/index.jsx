@@ -1,6 +1,7 @@
 import fetch from 'isomorphic-fetch'; // 基于Fetch的语法，在Node端基于http库实现的同构应用的 isomorphic-fetch。
 import { Config } from '../../component/mixin';
 
+
 export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 export const GET_DATA_SUCCESS = 'GET_DATA_SUCCESS';

@@ -11,7 +11,7 @@ import Websocket from 'react-websocket';
 import { Bcrumb } from '../../component/bcrumb/bcrumb';
 import styles from './style/home.less';
 
-import { Icon, Row, Col, Card, Steps, Button, message } from 'antd';
+import { Icon, Row, Col, Card, Steps, Button, message, Table } from 'antd';
 let userDiagramDom;
 let enterRate, checkInRatio, deepAccessRatio, jumpRatio;
 let bounceRateDom;
@@ -21,6 +21,7 @@ let backColor = '#404a59';
 class Main extends Component {
     constructor(props) {
     	super(props);
+
         this.state = {
              current: 0,
              userDiagramData: [],
@@ -30,6 +31,7 @@ class Main extends Component {
              jumpRatio:0,
         };
     }
+
 
     autoResize() {
         let userDiagram = document.getElementById('user-diagram');
@@ -41,9 +43,9 @@ class Main extends Component {
         enterRatio.style.height = '300px';
 
 
-        let deepAccess = document.getElementById('deep-access-ratio');
-        deepAccess.style.width = '100%';
-        deepAccess.style.height = '300px';
+        // let deepAccess = document.getElementById('deep-access-ratio');
+        // deepAccess.style.width = '100%';
+        // deepAccess.style.height = '300px';
 
 
         let JumpRatio = document.getElementById('jump-ratio');
@@ -340,11 +342,11 @@ class Main extends Component {
         this.autoResize();
         userDiagramDom = echarts.init(document.getElementById('user-diagram'));
         checkInRatio = echarts.init(document.getElementById('enter-ratio'));
-        deepAccessRatio = echarts.init(document.getElementById('deep-access-ratio'));
+        //deepAccessRatio = echarts.init(document.getElementById('deep-access-ratio'));
         jumpRatio = echarts.init(document.getElementById('jump-ratio'));
         this.drawUserDiagram();
         this.drawCheckInRatio();
-        this.drawDeepAccessRatio();
+        //this.drawDeepAccessRatio();
         this.drawJumpRatio();
         if ('WebSocket' in window) {
             webSocket = new WebSocket("ws://localhost:8080/websocket");
@@ -369,11 +371,16 @@ class Main extends Component {
     componentDidUpdate() {
         this.drawUserDiagram();
         this.drawCheckInRatio();
-        this.drawDeepAccessRatio();
+        //this.drawDeepAccessRatio();
         this.drawJumpRatio();
     }
 
 	render() {
+        const columns = [
+            {title:'属性名称', dataIndex:'property-name'},
+            {title:'值',dataIndex: 'property-value'}
+        ];
+        const dataSource = []
 		return (
         <div className="home-container mg-top20">
             <Row>
@@ -382,7 +389,9 @@ class Main extends Component {
                         <Card title="入店率" id="enter-ratio"/>
                     </Col>
                     <Col span={8}>
-                        <Card title="深访率" id="deep-access-ratio"/>
+                        <Table label="数据一览表" columns={columns} id="deep-access-ratio" class="uniform-background">
+
+                        </Table>
                     </Col>
                     <Col span={8}>
                         <Card title="跳出率" id="jump-ratio"/>
