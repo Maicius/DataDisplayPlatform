@@ -88,7 +88,7 @@ const Main = {
 	 * @returns
 	 */
 	removeLocalItem(key) {
-		if(arguments.length == 1) {
+		if(arguments.length === 1) {
 			return localStorage.removeItem(key);
 		} else {
 			return localStorage.clear();

@@ -24,9 +24,13 @@ class Main extends Component {
 
         this.state = {
              current: 0,
+             time:'',
              userDiagramData: [],
+             checkInFlows:0,
+             totalFlow:0,
              checkInFlow: [],
              checkInRatio: 0,
+             avgCheckInRatio: 0,
              deepAccessRatio: 0,
              jumpRatio:0,
         };
@@ -42,12 +46,6 @@ class Main extends Component {
         enterRatio.style.width = '100%';
         enterRatio.style.height = '300px';
 
-
-        // let deepAccess = document.getElementById('deep-access-ratio');
-        // deepAccess.style.width = '100%';
-        // deepAccess.style.height = '300px';
-
-
         let JumpRatio = document.getElementById('jump-ratio');
         JumpRatio.style.width = '100%';
         JumpRatio.style.height = '300px';
@@ -58,6 +56,10 @@ class Main extends Component {
         console.log(data);
         data = JSON.parse(data);
         let newData = [data.time, data.totalFlow];
+        this.state.totalFlow = this.state.totalFlow + data.totalFlow;
+        this.state.checkInFlows = this.state.checkInFlows + data.checkInFlow;
+        this.state.avgCheckInRatio = this.state.checkInFlows / this.state.totalFlow;
+        this.state.time = data.time;
         this.state.userDiagramData.push(newData);
         this.state.checkInRatio = data.checkInRatio;
         this.state.checkInFlow.push(data.checkInFlow);
@@ -67,7 +69,11 @@ class Main extends Component {
                         checkInRatio:this.state.checkInRatio,
                         deepAccessRatio: this.state.deepAccessRatio,
                         jumpRatio: this.state.jumpRatio,
-                        checkInFlow: this.state.checkInFlow});
+                        checkInFlow: this.state.checkInFlow,
+                        checkInFlows: this.state.checkInFlows,
+                        avgCheckInRatio: this.state.avgCheckInRatio,
+                        totalFlow: this.state.totalFlow,
+                        time: this.state.time});
         //console.log("userDiagramData:" + userDiagramData);
     }
 
@@ -144,7 +150,7 @@ class Main extends Component {
     drawJumpRatio(){
         let option = {
             title: {
-                text: '跳出率',
+                text: '深访率',
                 textStyle:{
                     color: '#fff'
                 }
@@ -153,7 +159,7 @@ class Main extends Component {
             series: [{
                 type: 'liquidFill',
                 radius: '80%',
-                data: [{value: this.state.jumpRatio,
+                data: [{value: this.state.deepAccessRatio,
                         direction: 'left'}, {
                     value: this.state.jumpRatio+0.1,
                     direction: 'left',
@@ -162,7 +168,7 @@ class Main extends Component {
                             color: 'red'
                         }
                     }
-                }, this.state.jumpRatio-0.3, this.state.jumpRatio-0.4]
+                }, this.state.deepAccessRatio-0.3, this.state.deepAccessRatio-0.4]
             }]
         };
         jumpRatio.setOption(option);
@@ -356,8 +362,6 @@ class Main extends Component {
                 //alert('WebSocket Open');
             };
             webSocket.onmessage = (data) =>{
-                console.log('receive data');
-                console.log(data.data);
                 this.handleUserData(data.data);
             };
             window.onbeforeunload = function () {
@@ -377,10 +381,14 @@ class Main extends Component {
 
 	render() {
         const columns = [
-            {title:'属性名称', dataIndex:'property-name'},
-            {title:'值',dataIndex: 'property-value'}
+            {title:'属性名称', dataIndex:'property_name'},
+            {title:'值',dataIndex: 'property_value',sorter:(a, b) => a.property_value - b.property_value}
         ];
-        const dataSource = []
+        const dataSource = [
+            {key:'1',property_name: '区域总流量', property_value: this.state.totalFlow},
+            {key:'2',property_name: '入店总客流量', property_value: this.state.checkInFlows},
+            {key:'3',property_name: '平均入店率', property_value: this.state.avgCheckInRatio},
+            {key:'4',property_name: '浅访率', property_value: this.state.jumpRatio}];
 		return (
         <div className="home-container mg-top20">
             <Row>
@@ -389,14 +397,18 @@ class Main extends Component {
                         <Card title="入店率" id="enter-ratio"/>
                     </Col>
                     <Col span={8}>
-                        <Table label="数据一览表" columns={columns} id="deep-access-ratio" class="uniform-background">
+                        <Table label="数据一览表"
+                               columns={columns}
+                               dataSource={dataSource}
+                               bordered
+                               class="uniform-background">
 
                         </Table>
                     </Col>
                     <Col span={8}>
                         <Card title="跳出率" id="jump-ratio"/>
                     </Col>
-                    <Col span={24} className="mg-top20">
+                    <Col span={24} className="">
                         <Card title="用户" id="user-diagram"/>
                     </Col>
                 </Col>
