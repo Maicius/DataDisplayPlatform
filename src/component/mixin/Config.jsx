@@ -17,7 +17,8 @@ const Main = {
 		shopNameInput: '请输入商场名称'
 	},
 	localKey: { // 本地存储Key
-		userToken: 'USER_AUTHORIZATION'
+		userToken: 'USER_AUTHORIZATION',
+		userName: 'USERNAME'
 	},
 	/**
 	 * 只能输入英文

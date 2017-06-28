@@ -93,6 +93,8 @@ class Login extends Component {
                     console.log('res:' + res);
                     if (res.userName !== null) {
                         Config.localItem(Config.localKey.userToken, (new Date()).getTime()); // 模拟登录成功返回的Token
+                        console.log(res.userName);
+                        Config.localItem(Config.localKey.userName, res.userName);
                         this.context.router.push({
                             pathname: '/home'
                         });
