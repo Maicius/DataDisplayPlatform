@@ -355,7 +355,7 @@ class Main extends Component {
         //this.drawDeepAccessRatio();
         this.drawJumpRatio();
         if ('WebSocket' in window) {
-            webSocket = new WebSocket("ws://localhost:8080/websocket");
+            webSocket = new WebSocket("ws://116.62.41.211:8080/WIFIProbeServer/websocket");
             webSocket.onerror = () =>{
             };
             webSocket.onopen = () =>{
