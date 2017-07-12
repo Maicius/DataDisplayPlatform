@@ -1,5 +1,5 @@
 const Main = {
-	target: process.env.NODE_ENV !== 'production' ? 'http://116.62.41.211:8080/WIFIProbeServer/' : 'http://116.62.41.211:8080/WIFIProbeServer/', //目标网站
+	target: process.env.NODE_ENV !== 'production' ? 'http://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/' : 'http://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/', //目标网站
     name: 'WIFI Probe Admin',
     prefix: 'SCUNET Admin',
     footerText: '川行 版权所有 © 2017 All Rights Reserved',

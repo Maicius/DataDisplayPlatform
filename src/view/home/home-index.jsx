@@ -53,7 +53,7 @@ class Main extends Component {
 
     handleUserData(data) {
         //let obj = eval('(' + data + ')');
-        console.log(data);
+        //console.log(data);
         data = JSON.parse(data);
         let newData = [data.time, data.totalFlow];
         this.state.totalFlow = this.state.totalFlow + data.totalFlow;
@@ -161,7 +161,7 @@ class Main extends Component {
                 radius: '80%',
                 data: [{value: this.state.deepAccessRatio,
                         direction: 'left'}, {
-                    value: this.state.jumpRatio+0.1,
+                    value: this.state.deepAccessRatio+0.1,
                     direction: 'left',
                     itemStyle: {
                         normal: {
@@ -355,7 +355,7 @@ class Main extends Component {
         //this.drawDeepAccessRatio();
         this.drawJumpRatio();
         if ('WebSocket' in window) {
-            webSocket = new WebSocket("ws://116.62.41.211:8080/WIFIProbeServer/websocket");
+            webSocket = new WebSocket("ws://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/websocket");
             webSocket.onerror = () =>{
             };
             webSocket.onopen = () =>{

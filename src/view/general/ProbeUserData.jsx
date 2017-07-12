@@ -85,10 +85,8 @@ class Main extends Component {
 			{title:'查看详情', key: 'view', dataIndex:'view'}
 		];
     	const data=[
-			{key:1,shop_name:'商业街', userMac:'aa:aa:aa:aa:aa:aa', brand:'Apple', first_time:'2017-05-12 09:00:00',
-			recent_time:'2017-07-12 10:00:00', times: 5, probeID:'00001', view:'点击查看详情'},
-            {key:2, shop_name:'二基楼',userMac:'aa:aa:aa:aa:aa:aa', brand:'HUAWEI', distance:'100', first_time:'2017-05-12 10:00:00',
-                recent_time:'2017-07-12 10:00:00', times: 4, probeID:'00001', view:'点击查看详情'}
+			{key:1,shop_name:'商业街', userMac:'32:ac:7c:9c:2f:fd', brand:'Apple', first_time:'2017-05-12 09:00:00',
+			recent_time:'2017-07-12 10:00:00', times: 5, probeID:'00001', view:'点击查看详情'}
 		];
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
