@@ -18,7 +18,10 @@ module.exports = {
             'react-router',
             'redux',
             'redux-thunk',
-            'immutable'
+            'immutable',
+            'echarts',
+            'antd',
+            'echarts-liquidfill'
         ]
     },
     output: {

@@ -7,7 +7,7 @@ var proxy = [{
     path: '/*/*', //必须得有一个文件地址，如果顶层文件夹名字不同，则用/*代替
     target: 'http://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/',
     //target: 'http:///116.62.41.211:8888:/',
-    host: 'http://116.62.41.211:8888/',
+    host: 'http://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/',
     secure: false
 }];
 

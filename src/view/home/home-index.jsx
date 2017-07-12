@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'; // 引入了React和PropTypes
+import React, { Component} from 'react'; // 引入了React和PropTypes
 import echarts from 'echarts';
 import * as ligquid from 'echarts-liquidfill'
 import pureRender from 'pure-render-decorator';
@@ -11,7 +11,7 @@ import Websocket from 'react-websocket';
 import { Bcrumb } from '../../component/bcrumb/bcrumb';
 import styles from './style/home.less';
 
-import { Icon, Row, Col, Card, Steps, Button, message, Table } from 'antd';
+import { Icon, Row, Col, Card, Table } from 'antd';
 let userDiagramDom;
 let enterRate, checkInRatio, deepAccessRatio, jumpRatio;
 let bounceRateDom;
@@ -24,11 +24,10 @@ class Main extends Component {
 
         this.state = {
              current: 0,
-             time:'',
-             userDiagramData: [],
+             userDiagramData:[],
              checkInFlows:0,
              totalFlow:0,
-             checkInFlow: [],
+             checkInFlow:[0],
              checkInRatio: 0,
              avgCheckInRatio: 0,
              deepAccessRatio: 0,
@@ -59,7 +58,7 @@ class Main extends Component {
         this.state.totalFlow = this.state.totalFlow + data.totalFlow;
         this.state.checkInFlows = this.state.checkInFlows + data.checkInFlow;
         this.state.avgCheckInRatio = this.state.checkInFlows / this.state.totalFlow;
-        this.state.time = data.time;
+
         this.state.userDiagramData.push(newData);
         this.state.checkInRatio = data.checkInRatio;
         this.state.checkInFlow.push(data.checkInFlow);
@@ -72,12 +71,14 @@ class Main extends Component {
                         checkInFlow: this.state.checkInFlow,
                         checkInFlows: this.state.checkInFlows,
                         avgCheckInRatio: this.state.avgCheckInRatio,
-                        totalFlow: this.state.totalFlow,
-                        time: this.state.time});
+                        totalFlow: this.state.totalFlow
+
+            });
         //console.log("userDiagramData:" + userDiagramData);
     }
 
     drawCheckInRatio(){
+       // console.log("draw check in ratio");
         let option = {
             title: {
                 text: '入店率',
@@ -109,45 +110,46 @@ class Main extends Component {
         checkInRatio.setOption(option);
     }
 
-    drawDeepAccessRatio(){
-        let option = {
-            title: {
-                text: '深访率',
-                textStyle:{
-                    color: '#fff'
-                }
-            },
-            backgroundColor: backColor,
-            series: [{
-                type: 'liquidFill',
-                radius: '80%',
-                data: [{value:this.state.deepAccessRatio,
-                        direction: 'right',
-                        itemStyle:{
-                        normal:{
-                            color: 'blue'
-                        }
-                    }}, {
-                    value: this.state.deepAccessRatio-0.1,
-                    direction: 'left',
-                    itemStyle: {
-                        normal: {
-                            color: 'red'
-                        }
-                    }
-                }, {value:this.state.deepAccessRatio-0.2,
-                    direction: 'right',
-                    itemStyle:{
-                        normal:{
-                            color: 'blue'
-                        }
-                    }}, this.state.deepAccessRatio-0.3]
-            }]
-        };
-        deepAccessRatio.setOption(option);
-    }
+    // drawDeepAccessRatio(){
+    //     let option = {
+    //         title: {
+    //             text: '深访率',
+    //             textStyle:{
+    //                 color: '#fff'
+    //             }
+    //         },
+    //         backgroundColor: backColor,
+    //         series: [{
+    //             type: 'liquidFill',
+    //             radius: '80%',
+    //             data: [{value:this.state.deepAccessRatio,
+    //                     direction: 'right',
+    //                     itemStyle:{
+    //                     normal:{
+    //                         color: 'blue'
+    //                     }
+    //                 }}, {
+    //                 value: this.state.deepAccessRatio-0.1,
+    //                 direction: 'left',
+    //                 itemStyle: {
+    //                     normal: {
+    //                         color: 'red'
+    //                     }
+    //                 }
+    //             }, {value:this.state.deepAccessRatio-0.2,
+    //                 direction: 'right',
+    //                 itemStyle:{
+    //                     normal:{
+    //                         color: 'blue'
+    //                     }
+    //                 }}, this.state.deepAccessRatio-0.3]
+    //         }]
+    //     };
+    //     deepAccessRatio.setOption(option);
+    // }
 
     drawJumpRatio(){
+        console.log("draw deep access");
         let option = {
             title: {
                 text: '深访率',
@@ -176,7 +178,7 @@ class Main extends Component {
 
     drawUserDiagram(){
         // 绘制图表
-        //console.trace(userDiagramData);
+        //console.log("draw user diagram");
         userDiagramDom.setOption( {
             title: {
                 text: '实时流量',
@@ -346,20 +348,23 @@ class Main extends Component {
 
     componentDidMount() {
         this.autoResize();
+        //console.log("componentDidMount");
         userDiagramDom = echarts.init(document.getElementById('user-diagram'));
         checkInRatio = echarts.init(document.getElementById('enter-ratio'));
         //deepAccessRatio = echarts.init(document.getElementById('deep-access-ratio'));
         jumpRatio = echarts.init(document.getElementById('jump-ratio'));
+        //console.log("dom initial");
         this.drawUserDiagram();
         this.drawCheckInRatio();
         //this.drawDeepAccessRatio();
         this.drawJumpRatio();
+        //console.log("echarts finish");
         if ('WebSocket' in window) {
             webSocket = new WebSocket("ws://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/websocket");
             webSocket.onerror = () =>{
             };
             webSocket.onopen = () =>{
-                //alert('WebSocket Open');
+                console.log("webSocket open");
             };
             webSocket.onmessage = (data) =>{
                 this.handleUserData(data.data);

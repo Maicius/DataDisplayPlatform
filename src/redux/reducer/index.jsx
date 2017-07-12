@@ -20,14 +20,14 @@ export const fetchData = (state = defaultlState , action = {}) => {
 export const requestData = (state = {}, action = {}) => {
 	switch(action.type) {
 		case GET_DATA_SUCCESS:
-		    console.log('GET_DATA_SUCCESS:');
-		    console.log(action.json);
+		    //console.log('GET_DATA_SUCCESS:');
+		    //console.log(action.json);
 			action.success(action.json);
-			console.log('AFTER success action:');
-			console.log(action.json);
+			//console.log('AFTER success action:');
+			//console.log(action.json);
 			state[action.name] = action.json;
-			console.log('state:');
-			console.log(state);
+			//console.log('state:');
+			//console.log(state);
 			return state;
 		default:
 			return state;
@@ -37,7 +37,7 @@ export const requestData = (state = {}, action = {}) => {
 export const WSUserDiagramData = (state = {}, action = {}) =>{
     switch(action.type) {
         case GET_USER_DIAGRAM_DATA:
-            console.log('get User Data');
+            //console.log('get User Data');
             return state;
         default:
             return state;
