@@ -90,10 +90,11 @@ class Login extends Component {
                     };
                 this.setState({loginBtnLoading: true, loginBtnText: '登录中...'});
                 this.props.getData('userLogin.action', loginParams, (res) => {
-                    console.log('res:' + res);
+                    console.log('verify code:')
+                    console.log(res.verifyCode);
                     if (res.userName !== null) {
                         Config.localItem(Config.localKey.userToken, (new Date()).getTime()); // 模拟登录成功返回的Token
-                        console.log(res.userName);
+                        //console.log(res.userName);
                         Config.localItem(Config.localKey.userName, res.userName);
                         this.context.router.push({
                             pathname: '/home'

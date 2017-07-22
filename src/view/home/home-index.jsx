@@ -179,134 +179,134 @@ class Main extends Component {
     drawUserDiagram(){
         // 绘制图表
         //console.log("draw user diagram");
-        userDiagramDom.setOption( {
-            title: {
-                text: '实时流量',
-                left: 'left',
-                textStyle:{
-                    color: '#fff'
-                }
-            },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
-            },
-            legend: {
-                y: 'top',
-                data: ['区域流量', '入店流量'],
-                textStyle: {
-                    color: '#fff',
-                    fontSize: 16
-                }
-            },
-            backgroundColor: backColor,
-            tooltip: {
-                trigger: 'axis'
-            },
-            xAxis: {
-                data: this.state.userDiagramData.map(function (item) {
-                    return item[0];
-                }),
-                axisLine:{
-                    lineStyle:{
-                        color: 'white',
-                        width: 2
+        try {
+            userDiagramDom.setOption({
+                title: {
+                    text: '实时流量',
+                    left: 'left',
+                    textStyle: {
+                        color: '#fff'
                     }
-                }
-            },
-            yAxis: {
-                splitLine: {
-                    show: false
                 },
-                axisLine:{
-                    lineStyle:{
-                        color: 'white',
-                        width: 2
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
                     }
-                }
-            },
-            dataZoom: [{
-                startValue: '2017-06-01',
-                textStyle: {
-                    color: '#8392A5'
                 },
-                dataBackground: {
-                    areaStyle: {
+                legend: {
+                    y: 'top',
+                    data: ['区域流量', '入店流量'],
+                    textStyle: {
+                        color: '#fff',
+                        fontSize: 16
+                    }
+                },
+                backgroundColor: backColor,
+                tooltip: {
+                    trigger: 'axis'
+                },
+                xAxis: {
+                    data: this.state.userDiagramData.map(function (item) {
+                        return item[0];
+                    }),
+                    axisLine: {
+                        lineStyle: {
+                            color: 'white',
+                            width: 2
+                        }
+                    }
+                },
+                yAxis: {
+                    splitLine: {
+                        show: false
+                    },
+                    axisLine: {
+                        lineStyle: {
+                            color: 'white',
+                            width: 2
+                        }
+                    }
+                },
+                dataZoom: [{
+                    startValue: '2017-06-01',
+                    textStyle: {
                         color: '#8392A5'
                     },
-                    lineStyle: {
-                        opacity: 0.8,
-                        color: '#8392A5'
-                    }
-                },
-            }, {
-                type: 'inside'
-            }],
-            visualMap: {
-                top: 10,
-                right: 10,
-                textStyle: {
-                    color: '#fff'
-                },
-                pieces: [{
-                    gt: 0,
-                    lte: 50,
-                    color: '#096'
-                }, {
-                    gt: 50,
-                    lte: 100,
-                    color: '#ffde33'
-                }, {
-                    gt: 100,
-                    lte: 150,
-                    color: '#ff9933'
-                }, {
-                    gt: 150,
-                    lte: 200,
-                    color: '#cc0033'
-                }, {
-                    gt: 200,
-                    lte: 300,
-                    color: '#660099'
-                }, {
-                    gt: 300,
-                    color: '#7e0023'
-                }],
-                outOfRange: {
-                    color: '#999'
-                }
-            },
-            series:
-                [{
-                name: '区域流量',
-                left: 'center',
-                type: 'line',
-                data: this.state.userDiagramData.map(function (item) {
-                    return item[1];
-                }),
-                markLine: {
-                    silent: true,
-                    label:'区域流量',
-                    lineStyle:{
-                        normal:{
-                            width:3,
-                            type: 'dashed'
+                    dataBackground: {
+                        areaStyle: {
+                            color: '#8392A5'
+                        },
+                        lineStyle: {
+                            opacity: 0.8,
+                            color: '#8392A5'
                         }
                     },
-                    data: [{
-                        yAxis: 50
+                }, {
+                    type: 'inside'
+                }],
+                visualMap: {
+                    top: 10,
+                    right: 10,
+                    textStyle: {
+                        color: '#fff'
+                    },
+                    pieces: [{
+                        gt: 0,
+                        lte: 50,
+                        color: '#096'
                     }, {
-                        yAxis: 100
+                        gt: 50,
+                        lte: 100,
+                        color: '#ffde33'
                     }, {
-                        yAxis: 150
+                        gt: 100,
+                        lte: 150,
+                        color: '#ff9933'
                     }, {
-                        yAxis: 200
+                        gt: 150,
+                        lte: 200,
+                        color: '#cc0033'
                     }, {
-                        yAxis: 300
-                    }]
+                        gt: 200,
+                        lte: 300,
+                        color: '#660099'
+                    }, {
+                        gt: 300,
+                        color: '#7e0023'
+                    }],
+                    outOfRange: {
+                        color: '#999'
                     }
-                },{
+                },
+                series: [{
+                    name: '区域流量',
+                    left: 'center',
+                    type: 'line',
+                    data: this.state.userDiagramData.map(function (item) {
+                        return item[1];
+                    }),
+                    markLine: {
+                        silent: true,
+                        label: '区域流量',
+                        lineStyle: {
+                            normal: {
+                                width: 3,
+                                type: 'dashed'
+                            }
+                        },
+                        data: [{
+                            yAxis: 50
+                        }, {
+                            yAxis: 100
+                        }, {
+                            yAxis: 150
+                        }, {
+                            yAxis: 200
+                        }, {
+                            yAxis: 300
+                        }]
+                    }
+                }, {
                     name: '入店流量',
                     left: 'center',
                     type: 'line',
@@ -314,10 +314,10 @@ class Main extends Component {
                     data: this.state.checkInFlow,
                     markLine: {
                         silent: true,
-                        label:'入店流量',
-                        lineStyle:{
-                            normal:{
-                                width:3,
+                        label: '入店流量',
+                        lineStyle: {
+                            normal: {
+                                width: 3,
                                 type: 'dashed'
                             }
                         },
@@ -335,7 +335,10 @@ class Main extends Component {
                     }
                 }]
 
-        });
+            });
+        }catch (e){
+            alert("error in get data");
+        }
         window.onresize = function () {
             this.autoResize();
             userDiagramDom.resize();

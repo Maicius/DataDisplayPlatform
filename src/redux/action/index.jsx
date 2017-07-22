@@ -34,7 +34,7 @@ const getUserDiagramDataAction = (path, data) =>{
 };
 // 获取数据成功
 const getDataSuccess = (path, json, success, name) => {
-    console.log('getDataSuccess' + json);
+    //console.log('getDataSuccess' + json);
 	return {
 		type: GET_DATA_SUCCESS,
 		path,
@@ -47,7 +47,7 @@ const getDataSuccess = (path, json, success, name) => {
 // 手动调用获取数据的action
 export const getData = (path, postData, success, name, method='GET') => {
 	let url = target + path + Config.paramFormat(postData);
-	console.log('action getData');
+	//console.log('action getData');
 	return dispatch => {
 		return fetch(url, {
 			method,

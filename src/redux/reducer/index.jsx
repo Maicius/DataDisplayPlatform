@@ -24,7 +24,7 @@ export const requestData = (state = {}, action = {}) => {
 		    //console.log(action.json);
 			action.success(action.json);
 			//console.log('AFTER success action:');
-			//console.log(action.json);
+			console.log(action.json);
 			state[action.name] = action.json;
 			//console.log('state:');
 			//console.log(state);
