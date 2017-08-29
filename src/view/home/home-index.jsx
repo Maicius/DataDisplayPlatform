@@ -10,7 +10,7 @@ import Websocket from 'react-websocket';
 // 公共面包屑
 import { Bcrumb } from '../../component/bcrumb/bcrumb';
 import styles from './style/home.less';
-
+import Singleton from 'js/socket';
 import { Icon, Row, Col, Card, Table } from 'antd';
 let userDiagramDom;
 let enterRate, checkInRatio, deepAccessRatio, jumpRatio;
@@ -21,7 +21,7 @@ let backColor = '#404a59';
 class Main extends Component {
     constructor(props) {
     	super(props);
-
+        this.socket = Singleton.getInstance();
         this.state = {
              current: 0,
              userDiagramData:[],
@@ -310,7 +310,6 @@ class Main extends Component {
                     name: '入店流量',
                     left: 'center',
                     type: 'line',
-
                     data: this.state.checkInFlow,
                     markLine: {
                         silent: true,
@@ -348,7 +347,11 @@ class Main extends Component {
         }.bind(this);
     }
 
-
+    componentWillMount(){
+        this.socket.on('testChannel', function (msg) {
+            console.log(msg)
+        })
+    }
     componentDidMount() {
         this.autoResize();
         //console.log("componentDidMount");
@@ -363,7 +366,8 @@ class Main extends Component {
         this.drawJumpRatio();
         //console.log("echarts finish");
         if ('WebSocket' in window) {
-            webSocket = new WebSocket("ws://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/websocket");
+            //webSocket = new WebSocket("ws://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/websocket");
+            webSocket = new WebSocket("ws://localhost:8080") ;
             webSocket.onerror = () =>{
             };
             webSocket.onopen = () =>{
