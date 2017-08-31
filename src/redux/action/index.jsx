@@ -5,7 +5,7 @@ import { Config } from '../../component/mixin';
 export const REQUEST_POSTS = 'REQUEST_POSTS';
 export const RECEIVE_POSTS = 'RECEIVE_POSTS';
 export const GET_DATA_SUCCESS = 'GET_DATA_SUCCESS';
-export const GET_USER_DIAGRAM_DATA = 'GET_USER_DIAGRAM_DATA';
+export const GET_REAL_TIME_DATA = 'GET_REAL_TIME_DATA';
 const target = Config.target;
 
 // 开始获取数据
@@ -25,13 +25,6 @@ const receivePosts = (path, json) => {
 	}
 };
 
-const getUserDiagramDataAction = (path, data) =>{
-    return {
-        type: GET_USER_DIAGRAM_DATA,
-        path,
-		data
-    }
-};
 // 获取数据成功
 const getDataSuccess = (path, json, success, name) => {
     //console.log('getDataSuccess' + json);
@@ -83,10 +76,13 @@ export const fetchGets = (path, postData) => {
 	}
 };
 
-export const getUserDiagramData = () =>{
-	return dispatch => {
+//获取实时数据
+export const getRealTimeData = (data) =>{
+	console.log(data);
+	return {
+		type: GET_REAL_TIME_DATA,
+		data
 	}
-
 }
 
 

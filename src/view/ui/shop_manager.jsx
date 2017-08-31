@@ -173,12 +173,82 @@ class Main extends Component {
             });
         });
     }
+    getShopInfos = () => {
+        let userName = localStorage.getItem("USERNAME"),
+            loginParams = {
+                user_name: userName
+            };
+        this.props.getData('queryShopInfos.action', loginParams, (res) => {
+            console.log(res);
+            if(res !== ""){
+                this.handleData(res)
+            }
+        })
+    };
+    handleData = (data) => {
+        //data must be json array,[{"key": 1}, {"shop_name": "test"}]
+        this.state.data = data.map((item) => {
+            return {
+                key: item.key,
+                shop_id:{
+                    editable: false,
+                    value: item.shop_id
+                },
+                shop_name: {
+                    editable: false,
+                    value: item.shop_name
+                },
+                shop_address:{
+                    editable: false,
+                    value: item.shop_address
+                },
+                shop_manager:{
+                    editable: false,
+                    value: item.shop_manager
+                },
+                shop_telephone:{
+                    editable: false,
+                    value:item.shop_telephone
+                },
+                avg_enter_ratio:{
+                    value:item.avg_enter_ratio
+                },
+                avg_stay_time:{
+                    value: item.avg_stay_time
+                },
+                total_enter_times:{
+                    value: 	item.total_enter_times
+                },
+                description:{
+                    editable: false,
+                    value:item.description
+                },
+                viewDetail:{
+                    value:'查看详情',
+                },
+                operation: {
+                    value: '编辑',
+                },
+            }
+        });
+        this.setState({
+                visible: false,
+                data: this.state.data});
+    };
+    convertJsonToArray = (strData) => {
+        strData = JSON.parse(strData);
+        let arr=[];
+        for(let p in strData){
+            arr.push([p, strData[p]]);
+        }
+        return arr;
+    };
     showModal = () => {
         this.setState({ visible: true });
-    }
+    };
     handleCancel = () => {
         this.setState({ visible: false });
-    }
+    };
     handleCreate = () => {
         const form = this.form;
         form.validateFields((err, values) => {
@@ -187,7 +257,7 @@ class Main extends Component {
                     shop_addr = values.shop_addr,
                     shop_manager = values.shop_manager,
                     shop_telephone = value.shop_telephone,
-                    shop_describe = value.shop_describe
+                    shop_describe = value.shop_describe,
                     loginParams = {
                         shop_name: shop_name,
                         shop_addr: shop_addr,
@@ -199,7 +269,7 @@ class Main extends Component {
                 this.props.getData('add_shop.action', loginParams, (res) =>{
                     console.log(res);
                     if(res !== ""){
-
+                        this.getShopInfos();
                     }
                 }, 'addShop', 'GET');
                 return;
@@ -213,7 +283,7 @@ class Main extends Component {
         this.form = form;
     }
     componentDidMount(){
-
+        this.getShopInfos();
     }
 
     render() {

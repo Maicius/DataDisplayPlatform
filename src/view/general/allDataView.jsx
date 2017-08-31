@@ -6,6 +6,7 @@ import { Icon, Row, Col, Card, Button, Radio, Table, DatePicker} from 'antd';
 import moment from 'moment';
 import {Bcrumb} from "../../component/bcrumb/bcrumb";
 import echarts from 'echarts';
+import BrandRatio from "../../component/charts/brandRatio";
 /* 以类的方式创建一个组件 */
 
 let echartDom, customRatio, stayTime, monthlyFlow, dailyUser;
@@ -27,9 +28,9 @@ class Main extends Component {
         dom.style.width='100%';
         dom.style.height='400px';
 
-        dom= document.getElementById('customRatio');
-        dom.style.width='100%';
-        dom.style.height='400px';
+        // dom= document.getElementById('customRatio');
+        // dom.style.width='100%';
+        // dom.style.height='400px';
 
         dom= document.getElementById('stayTime');
         dom.style.width='100%';
@@ -543,12 +544,12 @@ class Main extends Component {
     componentDidMount(){
         this.autoResize();
         echartDom = echarts.init(document.getElementById('CalendarView'));
-        customRatio = echarts.init(document.getElementById('customRatio'));
+        //customRatio = echarts.init(document.getElementById('customRatio'));
         stayTime = echarts.init(document.getElementById('stayTime'));
         monthlyFlow = echarts.init(document.getElementById('monthlyFlow'));
         dailyUser = echarts.init(document.getElementById('dailyUser'));
         this.drawDataView();
-        this.drawCustomerRatio();
+        //this.drawCustomerRatio();
         this.drawStayTime();
         this.drawMonthlyFlow();
         this.drawDailyUsers();
@@ -619,7 +620,9 @@ class Main extends Component {
                         </div>
                     </Col>
                     <Col span={10}>
-                        <Card title="顾客比例" id="customRatio" className="mg-left10"/>
+                        <div className="mg-left10">
+                            <BrandRatio/>
+                        </div>
                     </Col>
                     <Col span={10}>
                         <Card title="驻留时长" id="stayTime"/>

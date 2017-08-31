@@ -6,9 +6,9 @@ var config = require('./webpack.config.dev'); // 正常编译配置
 var proxy = [{
     path: '/*/*', //必须得有一个文件地址，如果顶层文件夹名字不同，则用/*代替
     //target: 'http://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/',
-    target: 'http://localhost:8080/',
+    host: 'http://localhost:8080/',
     //host: 'http://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/',
-    target: 'http://localhost:8080',
+    target: 'http://localhost:8080/',
     secure: false
 }];
 

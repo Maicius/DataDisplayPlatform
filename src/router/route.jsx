@@ -92,7 +92,7 @@ const twoui = (location, cb) => {
 // 登录验证
 const requireAuth = (nextState, replace) => {
 	let token = (new Date()).getTime() - Config.localItem('USER_AUTHORIZATION');
-	if(token > 7200000) { // 模拟Token保存2个小时
+	if(token > 72000000) { // 模拟Token保存2个小时
 		replace({
 			pathname: '/login',
 			state: { nextPathname: nextState.location.pathname }

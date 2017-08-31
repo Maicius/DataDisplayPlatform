@@ -7,7 +7,7 @@ const Singleton = (function () {
 
     function createInstance() {
         const io = require('socket.io-client')
-        const socket = io.connect();
+        const socket = io.connect('ws://localhost:8080');
         return socket;
     }
 

@@ -74,10 +74,10 @@ const Main = {
 	 */
 	localItem(key, value) {
 		if(arguments.length == 1) {
-			//console.log('key' + key, ', value:'+value);
+			console.log('key' + key, ', value:'+value);
 			return localStorage.getItem(key) && localStorage.getItem(key) !== 'null' ? localStorage.getItem(key) : null;
 		} else {
-            //console.log('key' + key, ',value:' + value);
+            console.log('key' + key, ',value:' + value);
 			return localStorage.setItem(key, value);
 		}
 	},

@@ -1,5 +1,5 @@
 import Immutable from 'immutable';
-import {REQUEST_POSTS, RECEIVE_POSTS, GET_DATA_SUCCESS, GET_USER_DIAGRAM_DATA} from '../action/index';
+import {REQUEST_POSTS, RECEIVE_POSTS, GET_DATA_SUCCESS, GET_REAL_TIME_DATA} from '../action/index';
 
 const defaultlState = Immutable.fromJS({data: {}, isFetching: false});
 
@@ -34,9 +34,10 @@ export const requestData = (state = {}, action = {}) => {
 	}
 }
 
-export const WSUserDiagramData = (state = {}, action = {}) =>{
+export const realTimeData = (state = {}, action = {}) =>{
     switch(action.type) {
-        case GET_USER_DIAGRAM_DATA:
+        case GET_REAL_TIME_DATA:
+
             //console.log('get User Data');
             return state;
         default:
