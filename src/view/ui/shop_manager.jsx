@@ -118,7 +118,7 @@ class Main extends Component {
 				total_enter_times:{
                 	value: 	10000
 				},
-				description:{
+                shop_describe:{
                 	editable: false,
                 	value:'It\'s a descrpition'
 				},
@@ -176,7 +176,7 @@ class Main extends Component {
     getShopInfos = () => {
         let userName = localStorage.getItem("USERNAME"),
             loginParams = {
-                user_name: userName
+                userName: userName
             };
         this.props.getData('queryShopInfos.action', loginParams, (res) => {
             console.log(res);
@@ -187,9 +187,10 @@ class Main extends Component {
     };
     handleData = (data) => {
         //data must be json array,[{"key": 1}, {"shop_name": "test"}]
+        console.log(data);
         this.state.data = data.map((item) => {
             return {
-                key: item.key,
+                key: item.shop_id,
                 shop_id:{
                     editable: false,
                     value: item.shop_id
@@ -200,7 +201,7 @@ class Main extends Component {
                 },
                 shop_address:{
                     editable: false,
-                    value: item.shop_address
+                    value: item.shop_addr
                 },
                 shop_manager:{
                     editable: false,
@@ -211,17 +212,17 @@ class Main extends Component {
                     value:item.shop_telephone
                 },
                 avg_enter_ratio:{
-                    value:item.avg_enter_ratio
+                    value:0
                 },
                 avg_stay_time:{
-                    value: item.avg_stay_time
+                    value: 0
                 },
                 total_enter_times:{
-                    value: 	item.total_enter_times
+                    value:0
                 },
-                description:{
+                shop_describe:{
                     editable: false,
-                    value:item.description
+                    value:item.shop_describe
                 },
                 viewDetail:{
                     value:'查看详情',
@@ -231,6 +232,7 @@ class Main extends Component {
                 },
             }
         });
+        console.log(this.state.data);
         this.setState({
                 visible: false,
                 data: this.state.data});
@@ -254,19 +256,21 @@ class Main extends Component {
         form.validateFields((err, values) => {
             if (!err) {
                 let shop_name = values.shop_name,
+                    user_name = localStorage.getItem("USERNAME"),
                     shop_addr = values.shop_addr,
                     shop_manager = values.shop_manager,
-                    shop_telephone = value.shop_telephone,
-                    shop_describe = value.shop_describe,
+                    shop_telephone = values.shop_telephone,
+                    shop_describe = values.shop_description,
                     loginParams = {
-                        shop_name: shop_name,
-                        shop_addr: shop_addr,
-                        shop_manager: shop_manager,
-                        shop_telephone: shop_telephone,
-                        shop_describe: shop_describe
+                        userName: user_name,
+                        shopName: shop_name,
+                        shopAddr: shop_addr,
+                        shopManager: shop_manager,
+                        shopTelephone: shop_telephone,
+                        shopDescribe: shop_describe
                     };
 
-                this.props.getData('add_shop.action', loginParams, (res) =>{
+                this.props.getData('addShopInfo.action', loginParams, (res) =>{
                     console.log(res);
                     if(res !== ""){
                         this.getShopInfos();
@@ -301,7 +305,7 @@ class Main extends Component {
         	<div>
         		<Bcrumb title="商场管理"/>
         		<Table bordered dataSource={dataSource} columns={columns}
-					   expandedRowRender={record => <p>{record.description}</p>}/>
+					   expandedRowRender={record => <p>{record.shop_describe}</p>}/>
                 <div>
                     <Button type="primary" onClick={this.showModal}>添加新商场</Button>
                 <CollectionCreateForm ref={this.saveFormRef}

@@ -26,12 +26,53 @@ class Main extends Component {
             selectedRowKeys: [],
             setBtnLoading:false,
             setBtnText: '提交',
-            shop_names: ['商业街', '二基楼', '法学院']
+            shop_names: [{"id":'1',"name":'商业街'}, {"id":'2',"name":'二基楼'}, {"id":'3',"name":'法学院'}]
         }
     }
 
     componentDidMount() {
+        this.getShopNames();
     }
+
+    getShopNames(){
+        let userName = localStorage.getItem("USERNAME"),
+        loginParams = {
+            userName: userName
+        };
+        this.props.getData('queryShopInfos.action', loginParams, (res) => {
+            console.log(res);
+            if(res !== ""){
+                this.state.shop_names = res;
+                this.setState({shop_names: this.state.shop_names});
+            }
+        })
+    }
+
+    getProbeInfo = (value) =>{
+        console.log(value.target.value);
+        let userName = localStorage.getItem("USERNAME"),
+            shop_id = value.target.value,
+            loginParams = {
+                userName: userName,
+                shopId: shop_id
+            };
+        this.props.getData('queryProbeInfos.action', loginParams, (res) => {
+            console.log(res);
+            if(res !== ""){
+                this.state.rangeValue = res.rangeValue;
+                this.state.timeValue = res.rangeValue;
+                this.state.activityDegree = res.activityDegree;
+                this.state.timeSplit = res.timeSplit;
+                this.setState({
+                    rangeValue: this.state.rangeValue,
+                    timeValue: this.state.timeValue,
+                    activityDegree: this.state.activityDegree,
+                    timeSplit: this.state.timeSplit
+                })
+            }
+        });
+
+    };
 
     next() {
         const current = this.state.current + 1;
@@ -64,14 +105,16 @@ class Main extends Component {
             timeSplit: value
         });
     };
-    handlePropertySubmit = (e) => {
+    handlePropertySubmit = (err, values) => {
 
     }
 
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({selectedRowKeys});
+
     }
+
 
     render() {
         const steps = [{
@@ -108,9 +151,6 @@ class Main extends Component {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const len = this.state.shop_names.length;
-        const buttonGroup = this.state.shop_names.map(
-            (button)=><RadioButton value={button}>{button}</RadioButton>);
         return (
             <div>
                 <Bcrumb title="参数设置"/>
@@ -131,7 +171,7 @@ class Main extends Component {
                                 {
                                     this.state.current === steps.length - 1
                                     &&
-                                    <Button type="primary" onClick={() => message.success('恭喜您，大牛!')}>完成</Button>
+                                    <Button type="primary" onClick={() => message.success("谢谢使用")}>完成</Button>
                                 }
                                 {
                                     this.state.current > 0
@@ -144,8 +184,9 @@ class Main extends Component {
                         </Card>
                         <Col span={24} className="mg-top10">
                             <div className="mg-left10 mg-top10">
-                                <RadioGroup defaultValue='a' size="large">
-                                    {buttonGroup}
+                                <RadioGroup defaultValue='a' size="large" onChange={this.getProbeInfo}>
+                                    {this.state.shop_names.map((shop)=>
+                                        <RadioButton  value={shop.shop_id}>{shop.shop_name}</RadioButton>)}
                                 </RadioGroup>
                             </div>
                             <Form onSubmit={this.handlePropertySubmit}>
