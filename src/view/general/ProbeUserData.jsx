@@ -22,17 +22,47 @@ class Main extends Component {
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({ selectedRowKeys });
-    }
+    };
+    componentDidMount(){
+    	this.getProbeUserData()
+	};
+    getProbeUserData = () =>{
+        let userName = localStorage.getItem("USERNAME"),
+            loginParams = {
+                userName: userName
+            };
+        this.props.getData('queryUserShop.action', loginParams, (res) => {
+            console.log(res);
+            if(res !== ""){
+                this.handleProbeUserData(res)
+            }
+        })
+	};
+	handleProbeUserData =(value) => {
+        this.state.userDataSource = value.map((item) => {
+            return {
+                key: item.shopId + Math.random(),
+                shop_id: item.shopId,
+				userMac: item.mac,
+				brand: item.brand,
+				stay_time: item.stayTime,
+				visit_cycle: item.visitCycle,
+				shop_name: item.shopName
+            }
+        });
+        console.log(this.state.userDataSource);
+        this.setState({userDataSource: this.state.userDataSource});
+    };
 	render() {
     	const columns=[
-            {title:'探针ID', key: 'probeID', dataIndex:'probeID', filters:
-				[{text:'00001', value:'00001'},
-                    {text:'00002', value:'00002'},
-					{text:'00003', value:'00003'},
-					{text:'00004', value:'00004'}],
+            {title:'商场ID', key: 'shop_id', dataIndex:'shop_id', filters:
+				[{text:'1', value:'1'},
+                    {text:'2', value:'2'},
+					{text:'3', value:'3'},
+					{text:'4', value:'4'}],
                 filterMultiple: true,
-                onFilter: (value, record) => record.probeID.indexOf(value) === 0},
-			{title:'商场', key:'shop_name', dataIndex:'shop_name'},
+                onFilter: (value, record) => record.shop_id.indexOf(value) === 0},
+			{title: '商场名称', key:'shop_name', dataIndex: 'shop_name'},
     		{title:'用户MAC', key:'userMac', dataIndex:'userMac'},
 			{title:'品牌', key:'brand', dataIndex:'brand', filters:
 				[{text: 'Apple', value:'Apple'},
@@ -79,37 +109,30 @@ class Main extends Component {
                 filterMultiple: true,
                 onFilter: (value, record) => record.brand.indexOf(value) === 0,
                 sorter: (a, b) => a.brand.length - b.brand.length,},
-			{title:'首次出现时间', key: 'first_time', dataIndex:'first_time', sorter:(a, b) =>a.first_time - b.first_time},
-			{title:'最近出现时间', key:'recent_time', dataIndex:'recent_time', sorter:(a, b) =>a.recent_time - b.recent_time},
-			{title:'出现次数', key: 'times', dataIndex:'times', sorter: (a, b) => a.times - b.times},
-			{title:'查看详情', key: 'view', dataIndex:'view'}
+			{title:'累计停留时间', key: 'stay_time', dataIndex:'stay_time', sorter:(a, b) =>a.stay_time - b.stay_time},
+			{title:'来访周期', key:'visit_cycle', dataIndex:'visit_cycle', sorter:(a, b) =>a.visit_cycle - b.visit_cycle},
 		];
-    	const data=[
-			{key:1,shop_name:'商业街', userMac:'32:ac:7c:9c:2f:fd', brand:'Apple', first_time:'2017-05-12 09:00:00',
-			recent_time:'2017-07-12 10:00:00', times: 5, probeID:'00001', view:'点击查看详情'}
-		];
+    	const data=this.state.userDataSource;
         const { loading, selectedRowKeys } = this.state;
         const rowSelection = {
             selectedRowKeys,
             onChange: this.onSelectChange,
         };
-        const hasSelected = selectedRowKeys.length > 0;
     	return(
     	<div>
 			<Bcrumb title="探针数据"/>
 			<Table rowSelection={rowSelection}
 				   bordered
 				   columns={columns}
-				   expandedRowRender={record => <p>{record.recent_time}</p>}
+				   expandedRowRender={record => <p>{record.visit_cycle}</p>}
 				   dataSource={data}
 			     />
 			<Button className="mg-right10"
 				type="primary"
-				onClick={this.start}
-				disabled={!hasSelected}
+				onClick={this.getProbeUserData}
 				loading={loading}
 			>
-				删除
+				刷新
 			</Button>
 		</div>
 		)
