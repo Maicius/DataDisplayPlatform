@@ -26,6 +26,7 @@ class Main extends Component {
             selectedRowKeys: [],
             setBtnLoading:false,
             setBtnText: '提交',
+            shop_id:1,
             shop_names: [{"id":'1',"name":'商业街'}, {"id":'2',"name":'二基楼'}, {"id":'3',"name":'法学院'}]
         }
     }
@@ -50,6 +51,7 @@ class Main extends Component {
 
     getProbeInfo = (value) =>{
         console.log(value.target.value);
+        this.state.shop_id = value.target.value;
         let userName = localStorage.getItem("USERNAME"),
             shop_id = value.target.value,
             loginParams = {
@@ -105,15 +107,18 @@ class Main extends Component {
             timeSplit: value
         });
     };
-    handlePropertySubmit = (err, values) => {
-
-    }
+    handlePropertySubmit = (err) => {
+        err.preventDefault();
+        this.props.form.validateFieldsAndScroll((err, values) =>{
+            let shop_id = this.state.shop_id;
+        });
+    };
 
     onSelectChange = (selectedRowKeys) => {
         console.log('selectedRowKeys changed: ', selectedRowKeys);
         this.setState({selectedRowKeys});
 
-    }
+    };
 
 
     render() {
@@ -186,7 +191,7 @@ class Main extends Component {
                             <div className="mg-left10 mg-top10">
                                 <RadioGroup defaultValue='a' size="large" onChange={this.getProbeInfo}>
                                     {this.state.shop_names.map((shop)=>
-                                        <RadioButton  value={shop.shop_id}>{shop.shop_name}</RadioButton>)}
+                                        <RadioButton key={shop.shop_id} value={shop.shop_id}>{shop.shop_name}</RadioButton>)}
                                 </RadioGroup>
                             </div>
                             <Form onSubmit={this.handlePropertySubmit}>

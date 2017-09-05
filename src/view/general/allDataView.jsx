@@ -8,29 +8,43 @@ import {Bcrumb} from "../../component/bcrumb/bcrumb";
 import echarts from 'echarts';
 import BrandRatio from "../../component/charts/brandRatio";
 /* 以类的方式创建一个组件 */
-
+const RadioButton = Radio.Button;
+const RadioGroup = Radio.Group;
 let echartDom, customRatio, stayTime, monthlyFlow, dailyUser;
 let backColor = '#404a59';
-let data;
+
 class Main extends Component {
     constructor(props) {
     	super(props);
         this.state = {
             selectedRowKeys: [],  // Check here to configure the default column
             loading: false,
+            shopName:[{"shop_id":'1',"shop_name":'商业街'},{"shop_id":'2',"shop_name":'商业街'},{"shop_id":'3',"shop_name":'商业街'}],
+            yearData:[]
         };
     }
     shouldComponentUpdate(nextProps, nextState) {
         return !is(fromJS(this.props), fromJS(nextProps)) || !is(fromJS(this.state),fromJS(nextState))
     }
+    getShopName(){
+        let userName = localStorage.getItem("USERNAME"),
+            loginParams = {
+                userName: userName
+            };
+        this.props.getData('queryShopInfos.action', loginParams, (res) => {
+            console.log(res);
+            if(res !== ""){
+                this.state.shopName = res;
+                this.setState({shopName: this.state.shopName});
+            }
+        })
+    }
+
     autoResize(){
         let dom = document.getElementById('CalendarView');
         dom.style.width='100%';
         dom.style.height='400px';
 
-        // dom= document.getElementById('customRatio');
-        // dom.style.width='100%';
-        // dom.style.height='400px';
 
         dom= document.getElementById('stayTime');
         dom.style.width='100%';
@@ -48,10 +62,13 @@ class Main extends Component {
 
     getVirtulData(year) {
 
+        //customRatio = echarts.init(document.getElementById('customRatio'));
         year = year || '2017';
         var date = +echarts.number.parseDate(year + '-01-01');
         var end = +echarts.number.parseDate((+year + 1) + '-01-01');
         var dayTime = 3600 * 24 * 1000;
+        console.log("date" +date);
+        console.log("end" + end);
         var data = [];
         for (var time = date; time < end; time += dayTime) {
                 data.push([
@@ -59,7 +76,10 @@ class Main extends Component {
                 Math.floor(Math.random() * 10000)
             ]);
             }
-        return data;
+        console.log(data);
+        //return data;
+        this.state.yearData = data;
+        this.setState({yearData: this.state.yearData});
     }
 
     drawCustomerRatio(){
@@ -145,7 +165,7 @@ class Main extends Component {
     drawDataView(){
         const mgLeft = 100;
         const mgTop = 10;
-        data = this.getVirtulData(2016);
+        let data = this.state.yearData;
         //console.log(data);
         let option = {
             backgroundColor: backColor,
@@ -256,26 +276,34 @@ class Main extends Component {
     drawDailyUsers(){
 
         let option = {
-            tooltip : {
-                trigger: 'axis',
-                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                }
-            },
+            backgroundColor: backColor,
             title: {
-                text: '用户活跃时间',
-                left:'center',
+                text: '平均每天流量分析图',
                 textStyle: {
-                    color: '#fff'
+                    fontWeight: 'normal',
+                    fontSize: 16,
+                    color: '#F1F1F3'
+                },
+                left: '6%'
+            },
+            tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    lineStyle: {
+                        color: '#57617B'
+                    }
                 }
             },
-            backgroundColor:backColor,
-
             legend: {
-                data:['客流量','入店量'],
-                left:'left',
-                textStyle:{
-                    color:'#fff'
+                icon: 'rect',
+                itemWidth: 14,
+                itemHeight: 5,
+                itemGap: 13,
+                data: ['区域客流量', '入店量'],
+                right: '4%',
+                textStyle: {
+                    fontSize: 12,
+                    color: '#F1F1F3'
                 }
             },
             grid: {
@@ -284,71 +312,96 @@ class Main extends Component {
                 bottom: '3%',
                 containLabel: true
             },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
-            },
-            xAxis : [
-                {   left:'center',
-                    top:'center',
-                    type : 'category',
-                    data : ['00：00','01：00','02：00','03：00','04：00','05：00','06：00','07：00','08：00','09：00','10：00','11：00','12：00','13：00',
-                        '14：00','15：00','16：00','17：00','18：00','19：00','20：00','21：00','2：00','23：00','24：00'],
-                    axisLine:{
-                        lineStyle:{
-                            color:'#fff'
-                        }
+            xAxis: [{
+                type: 'category',
+                boundaryGap: false,
+                axisLine: {
+                    lineStyle: {
+                        color: '#57617B'
                     }
-                }
-            ],
-            yAxis : [
-                {
-                    type : 'value',
-                    axisLine:{
-                        lineStyle:{
-                            color:'#fff'
-                        }
-                    }
-                }
-            ],
-            series : [
-                {
-                    label:{
-                        normal:{
-                            show: true,
-                            position:'inside'
-                        }
-                    },
-                    itemStyle: {
-                        normal: {
-                            color: new echarts.graphic.LinearGradient(
-                                0, 0, 0, 1,
-                                [
-                                    {offset: 0, color: '#83bff6'},
-                                    {offset: 0.5, color: '#188df0'},
-                                    {offset: 1, color: '#00BFFF'}
-                                ]
-                            )
-                        }
-                    },
-                    name:'客流量',
-                    type:'bar',
-                    data:[123, 123, 301, 334, 390, 330, 320,320, 332, 201, 444, 312, 331, 310,280, 360, 301, 200, 199, 160, 100,80, 99, 56,40]
                 },
-                {
-                    label:{
-                        normal:{
-                            show: true,
-                            position:'inside'
-                        }
-                    },
-                    name:'入店量',
-                    type:'bar',
-                    stack: '广告',
-                    data:[20, 132, 101, 134, 90, 230, 200,120, 132, 111, 134, 90, 230, 210,120, 132, 101, 134, 90, 140, 110, 90, 23,45, 12]
+                data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13',
+                    '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+            }],
+            yAxis: [{
+                type: 'value',
+                axisTick: {
+                    show: false
+                },
+                axisLine: {
+                    lineStyle: {
+                        color: '#57617B'
+                    }
+                },
+                axisLabel: {
+                    margin: 10,
+                    textStyle: {
+                        fontSize: 14
+                    }
+                },
+                splitLine: {
+                    lineStyle: {
+                        color: '#57617B'
+                    }
                 }
-            ]
+            }],
+            series: [{
+                name: '区域客流量',
+                type: 'line',
+                smooth: true,
+                lineStyle: {
+                    normal: {
+                        width: 1
+                    }
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(137, 189, 27, 0.3)'
+                        }, {
+                            offset: 0.8,
+                            color: 'rgba(137, 189, 27, 0)'
+                        }], false),
+                        shadowColor: 'rgba(0, 0, 0, 0.1)',
+                        shadowBlur: 10
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'rgb(137,189,27)'
+                    }
+                },
+                data: [96,96,97,95,98,94,89,94,80,52,79,94,96,96,97,95,98,94,89,96,96,97,95,98]
+            }, {
+                name: '入店量',
+                type: 'line',
+                smooth: true,
+                lineStyle: {
+                    normal: {
+                        width: 1
+                    }
+                },
+                areaStyle: {
+                    normal: {
+                        color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: 'rgba(219, 50, 51, 0.3)'
+                        }, {
+                            offset: 0.8,
+                            color: 'rgba(219, 50, 51, 0)'
+                        }], false),
+                        shadowColor: 'rgba(0, 0, 0, 0.1)',
+                        shadowBlur: 10
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: 'rgb(219,50,51)'
+                    }
+                },
+                data: [84,31,67,72,43,49,69,50,49,37,62,50,8,91,59,39,9,72,9, 15, 20, 9, 10, 6 ]
+            }, ]
         };
         dailyUser.setOption(option);
     }
@@ -541,6 +594,9 @@ class Main extends Component {
         });
     }
 
+    componentDidUpdate(){
+        this.drawDataView();
+    }
     componentDidMount(){
         this.autoResize();
         echartDom = echarts.init(document.getElementById('CalendarView'));
@@ -553,10 +609,6 @@ class Main extends Component {
         this.drawStayTime();
         this.drawMonthlyFlow();
         this.drawDailyUsers();
-    }
-
-    componentDidUpdate(){
-
     }
 
 	render() {
@@ -573,11 +625,11 @@ class Main extends Component {
                     <Bcrumb title="数据一览"/>
                     <Col span={4}>
                         <div className="mg-left10">
-                            <RangePicker
-                                defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
-                                format={dateFormat}
-                            />
-                            <Table columns={columns} className="mg-top20"/>
+                            <RadioGroup defaultValue="1" size="large" onChange={this.getVirtulData(2016)}>
+                                {this.state.shopName.map((shop)=>
+                                    <RadioButton key={shop.shop_id} value={shop.shop_id}>{shop.shop_name}</RadioButton>)}
+                            </RadioGroup>
+                            {/*<Table columns={columns} className="mg-top20"/>*/}
                         </div>
                     </Col>
                     <Col span={20}>

@@ -47,7 +47,9 @@ class Main extends Component {
 				brand: item.brand,
 				stay_time: item.stayTime,
 				visit_cycle: item.visitCycle,
-				shop_name: item.shopName
+				shop_name: item.shopName,
+                first_time: item.firstTime,
+                recent_time:item.recent_time
             }
         });
         console.log(this.state.userDataSource);
@@ -96,9 +98,6 @@ class Main extends Component {
                             text:'AMPAK',
                             value:'AMPAK',
                         },{
-                            text:'Smartisan',
-                            value:'Smartisan',
-                        },{
                             text:'Tenda',
                             value:'Tenda',
                         },{
@@ -111,6 +110,8 @@ class Main extends Component {
                 sorter: (a, b) => a.brand.length - b.brand.length,},
 			{title:'累计停留时间', key: 'stay_time', dataIndex:'stay_time', sorter:(a, b) =>a.stay_time - b.stay_time},
 			{title:'来访周期', key:'visit_cycle', dataIndex:'visit_cycle', sorter:(a, b) =>a.visit_cycle - b.visit_cycle},
+            {title:'首次出现时间', key:'first_time', dataIndex:'first_time'},
+            {title:'最近出现时间', key:'recent_time', dataIndex:'recent_time'}
 		];
     	const data=this.state.userDataSource;
         const { loading, selectedRowKeys } = this.state;

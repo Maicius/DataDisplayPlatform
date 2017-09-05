@@ -49,20 +49,25 @@ class Main extends Component {
         JumpRatio.style.height = '300px';
     }
 
+    getLocalTime = (nS) => {
+        console.log(new Date(parseInt(nS)).toLocaleString());
+        return new Date(parseInt(nS)).toLocaleString();
+    }
     handleUserData(data) {
         //let obj = eval('(' + data + ')');
         //console.log(data);
         data = JSON.parse(data);
-        let newData = [data.time, data.totalFlow];
-        this.state.totalFlow = this.state.totalFlow + data.totalFlow;
-        this.state.checkInFlows = this.state.checkInFlows + data.checkInFlow;
-        this.state.avgCheckInRatio = this.state.checkInFlows / this.state.totalFlow;
+        console.log(data);
+        let newData = [this.getLocalTime(data.time), data.totalFlow];
+        this.state.totalFlow = data.totalFlow;
+        this.state.checkInFlows = data.checkInFlow;
+        this.state.avgCheckInRatio = (this.state.checkInFlows / this.state.totalFlow).toFixed(2);
 
         this.state.userDiagramData.push(newData);
-        this.state.checkInRatio = data.checkInRatio;
+        this.state.checkInRatio = data.checkInRatio.toFixed(2);
         this.state.checkInFlow.push(data.checkInFlow);
         this.state.deepAccessRatio = data.deepVisitRatio;
-        this.state.jumpRatio = data.jumpRatio;
+        this.state.jumpRatio = data.jumpRatio.toFixed(2);
         this.setState({ userDiagramData: this.state.userDiagramData,
                         checkInRatio:this.state.checkInRatio,
                         deepAccessRatio: this.state.deepAccessRatio,
@@ -366,7 +371,8 @@ class Main extends Component {
         //console.log("echarts finish");
         if ('WebSocket' in window) {
             //webSocket = new WebSocket("ws://116.62.41.211:8888/WIFIProbeAnalysis_web-1.0-SNAPSHOT/websocket");
-            webSocket = new WebSocket("ws://localhost:8080/websocket") ;
+            //webSocket = new WebSocket("ws://120.24.238.195:8080/WIFIProbeAnalysis_web-1.0-SNAPSHOT/websocket") ;
+            webSocket = new WebSocket("ws://localhost:8080/websocket");
             webSocket.onerror = () =>{
             };
             webSocket.onopen = () =>{
