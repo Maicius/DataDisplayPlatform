@@ -16,7 +16,7 @@ class Main extends Component {
     	this.state = {
     		userDataSource:[],
             selectedRowKeys: [],
-            loading: false
+            loading: true
     	};
     }
     onSelectChange = (selectedRowKeys) => {
@@ -45,7 +45,7 @@ class Main extends Component {
                 shop_id: item.shopId,
 				userMac: item.mac,
 				brand: item.brand,
-				stay_time: item.stayTime,
+				stay_time: (item.stayTime / 1000).toFixed(0),
 				visit_cycle: item.visitCycle,
 				shop_name: item.shopName,
                 first_time: item.firstTime,
@@ -53,7 +53,8 @@ class Main extends Component {
             }
         });
         console.log(this.state.userDataSource);
-        this.setState({userDataSource: this.state.userDataSource});
+        this.setState({userDataSource: this.state.userDataSource,
+                        loading: false});
     };
 	render() {
     	const columns=[
@@ -125,7 +126,6 @@ class Main extends Component {
 			<Table rowSelection={rowSelection}
 				   bordered
 				   columns={columns}
-				   expandedRowRender={record => <p>{record.visit_cycle}</p>}
 				   dataSource={data}
 			     />
 			<Button className="mg-right10"
