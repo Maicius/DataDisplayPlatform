@@ -2,7 +2,7 @@ import React, { Component, PropTypes } from 'react'; // 引入了React和PropTyp
 import { connect } from 'react-redux';
 import { is, fromJS } from 'immutable';
 import { RenderData } from '../../component/mixin';
-import { Table, Input, Popconfirm, Form, Col,Slider, InputNumber, Spin, message, Button, Row } from 'antd';
+import { Table, Input, Popconfirm, Form, message, Button, Row } from 'antd';
 import EditableCell from '../../component/mixin/editableCell';
 import Config from '../../component/mixin/Config';
 import {Bcrumb} from "../../component/bcrumb/bcrumb";
@@ -88,6 +88,7 @@ class Main extends Component {
         }];
         this.state = {
             visible: false,
+            loading: false,
             data: [{
                 key: '0',
                 shop_id: {
@@ -290,6 +291,20 @@ class Main extends Component {
         this.getShopInfos();
     }
 
+    getExcel = () =>{
+        this.setState({loading: true});
+        let userName = localStorage.getItem("USERNAME"),
+            params = {
+                user_name: userName
+            };
+        this.props.getData("/exportExcel.action", params, (res) => {
+            if(res.success == 1){
+                message.success("成功导出到目录：/Users/maicius/Desktop/");
+            }
+            this.setState({loading: false});
+        })
+    };
+
     render() {
         const { data } = this.state;
         const dataSource = data.map((item) => {
@@ -312,6 +327,7 @@ class Main extends Component {
                                       visible={this.state.visible}
                                       onCancel={this.handleCancel}
                                       onCreate={this.handleCreate}/>
+                    <Button className="mg-left10" type="primary" loading={this.state.loading} onClick={this.getExcel}>导出报表</Button>
                 </div>
 			</div>
 		);

@@ -597,6 +597,12 @@ class Main extends Component {
     componentDidUpdate(){
         this.drawDataView();
     }
+
+    getYearData(){
+        this.props.getData("/queryActivityYear.action", "", (res) => {
+            console.log(res);
+        });
+    }
     componentDidMount(){
         this.autoResize();
         echartDom = echarts.init(document.getElementById('CalendarView'));
@@ -609,6 +615,7 @@ class Main extends Component {
         this.drawStayTime();
         this.drawMonthlyFlow();
         this.drawDailyUsers();
+        this.getYearData();
     }
 
 	render() {
