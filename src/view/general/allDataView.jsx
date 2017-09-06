@@ -19,8 +19,10 @@ class Main extends Component {
         this.state = {
             selectedRowKeys: [],  // Check here to configure the default column
             loading: false,
-            shopName:[{"shop_id":'1',"shop_name":'商业街'},{"shop_id":'2',"shop_name":'商业街'},{"shop_id":'3',"shop_name":'商业街'}],
-            yearData:[]
+            shopName:[{"shop_id":'1',"shop_name":'南京国际会展中心'},{"shop_id":'2',"shop_name":'华联'},{"shop_id":'3',"shop_name":'二基楼'}],
+            yearData:[],
+            dayData:[{"checkInnum":4,"hour":1,"number":8},{"checkInnum":5,"hour":2,"number":6},{"checkInnum":1,"hour":3,"number":4},{"checkInnum":2,"hour":4,"number":4},{"checkInnum":0,"hour":5,"number":1},{"checkInnum":7,"hour":6,"number":10},{"checkInnum":3,"hour":7,"number":12},{"checkInnum":10,"hour":8,"number":12},{"checkInnum":1,"hour":9,"number":21},{"checkInnum":12,"hour":10,"number":17},{"checkInnum":4,"hour":11,"number":14},{"checkInnum":5,"hour":12,"number":17},{"checkInnum":1,"hour":13,"number":17},{"checkInnum":4,"hour":14,"number":27},{"checkInnum":12,"hour":15,"number":26},{"checkInnum":22,"hour":16,"number":27},{"checkInnum":6,"hour":17,"number":18},{"checkInnum":7,"hour":18,"number":18},{"checkInnum":13,"hour":19,"number":14},{"checkInnum":3,"hour":20,"number":24},{"checkInnum":15,"hour":21,"number":19},{"checkInnum":8,"hour":22,"number":10},{"checkInnum":5,"hour":23,"number":8},{"checkInnum":0,"hour":24,"number":1}],
+            monthData:[]
         };
     }
     shouldComponentUpdate(nextProps, nextState) {
@@ -320,8 +322,9 @@ class Main extends Component {
                         color: '#57617B'
                     }
                 },
-                data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13',
-                    '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
+                data: this.state.dayData.map((item) => {
+                    return item.hour;
+                }),
             }],
             yAxis: [{
                 type: 'value',
@@ -372,7 +375,9 @@ class Main extends Component {
                         color: 'rgb(137,189,27)'
                     }
                 },
-                data: [96,96,97,95,98,94,89,94,80,52,79,94,96,96,97,95,98,94,89,96,96,97,95,98]
+                data: this.state.dayData.map((item) => {
+                    return item.number;
+                }),
             }, {
                 name: '入店量',
                 type: 'line',
@@ -400,7 +405,9 @@ class Main extends Component {
                         color: 'rgb(219,50,51)'
                     }
                 },
-                data: [84,31,67,72,43,49,69,50,49,37,62,50,8,91,59,39,9,72,9, 15, 20, 9, 10, 6 ]
+                data: this.state.dayData.map((item) => {
+                    return item.checkInnum;
+                }),
             }, ]
         };
         dailyUser.setOption(option);
@@ -595,12 +602,20 @@ class Main extends Component {
     }
 
     componentDidUpdate(){
+        console.log("update");
         this.drawDataView();
     }
 
     getYearData(){
-        this.props.getData("/queryActivityYear.action", "", (res) => {
+        this.props.getData("queryActivityYear.action", "", (res) => {
             console.log(res);
+            this.setState({yearData: res})
+        });
+    }
+    onMonthChange(){
+        this.props.getData("queryActivityMongth.action", "", (res) =>{
+           console.log(res);
+           this.setState({monthData:res});
         });
     }
     componentDidMount(){
@@ -615,10 +630,31 @@ class Main extends Component {
         this.drawStayTime();
         this.drawMonthlyFlow();
         this.drawDailyUsers();
-        this.getYearData();
+
+    }
+    onDayChange = (date, dateString) => {
+        console.log("dateString:");
+        console.log(dateString);
+        let dateStr = dateString,
+        params = {
+            activityDay: dateStr
+        };
+        this.props.getData("queryActivityDay.action", params, (res) => {
+            if(res !=="") {
+                console.log("success get date");
+                console.log(res);
+                this.state.DayData = res;
+                console.log(this.state.DayData);
+                this.setState({dayData: this.state.dayData});
+                this.drawDailyUsers();
+            }
+        }, "date", "GET");
+    };
+    componentDidUpdate(){
+        this.drawDailyUsers();
     }
 
-	render() {
+    render() {
         const columns=[
             {title:'开始时间', dataIndex:'start_time'},
             {title:'截止时间', dataIndex:'end_time'}
@@ -645,11 +681,7 @@ class Main extends Component {
 
                     <Col span={4}>
                         <div className="mg-left10">
-                            <RangePicker
-                                defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
-                                format={dateFormat}
-                            />
-                            <Table columns={columns} className="mg-top20"/>
+                            <MonthPicker onChange={this.onMonthChange} />
                         </div>
                     </Col>
                     <Col span={20}>
@@ -658,11 +690,7 @@ class Main extends Component {
 
                     <Col span={4}>
                         <div className="mg-left10">
-                            <RangePicker
-                                defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
-                                format={dateFormat}
-                            />
-                            <Table columns={columns} className="mg-top20"/>
+                            <DatePicker onChange={this.onDayChange} />
                         </div>
                     </Col>
                     <Col span={20}>
@@ -670,13 +698,6 @@ class Main extends Component {
                     </Col>
 
                     <Col span={4}>
-                        <div className="mg-left10">
-                            <RangePicker
-                                defaultValue={[moment('2015/01/01', dateFormat), moment('2015/01/01', dateFormat)]}
-                                format={dateFormat}
-                            />
-                            <Table columns={columns} className="mg-top20"/>
-                        </div>
                     </Col>
                     <Col span={10}>
                         <div className="mg-left10">

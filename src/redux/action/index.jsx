@@ -40,6 +40,7 @@ const getDataSuccess = (path, json, success, name) => {
 // 手动调用获取数据的action
 export const getData = (path, postData, success, name, method='GET') => {
 	let url = target + path + Config.paramFormat(postData);
+	console.log(url);
 	//console.log('action getData');
 	return dispatch => {
 		return fetch(url, {

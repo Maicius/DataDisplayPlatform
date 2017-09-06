@@ -58,21 +58,20 @@ class Main extends Component {
         //console.log(data);
         data = JSON.parse(data);
         console.log(data);
-        let newData = [this.getLocalTime(data.time), data.totalFlow];
+        let newData = [this.getLocalTime(data.time), data.totalFlow, data.checkInFlow];
         this.state.totalFlow = data.totalFlow;
         this.state.checkInFlows = data.checkInFlow;
         this.state.avgCheckInRatio = (this.state.checkInFlows / this.state.totalFlow).toFixed(2);
 
         this.state.userDiagramData.push(newData);
         this.state.checkInRatio = data.checkInRatio.toFixed(2);
-        this.state.checkInFlow.push(data.checkInFlow);
         this.state.deepAccessRatio = data.deepVisitRatio;
         this.state.jumpRatio = data.jumpRatio.toFixed(2);
         this.setState({ userDiagramData: this.state.userDiagramData,
                         checkInRatio:this.state.checkInRatio,
                         deepAccessRatio: this.state.deepAccessRatio,
                         jumpRatio: this.state.jumpRatio,
-                        checkInFlow: this.state.checkInFlow,
+
                         checkInFlows: this.state.checkInFlows,
                         avgCheckInRatio: this.state.avgCheckInRatio,
                         totalFlow: this.state.totalFlow
@@ -256,26 +255,26 @@ class Main extends Component {
                     },
                     pieces: [{
                         gt: 0,
-                        lte: 50,
+                        lte: 5,
                         color: '#096'
                     }, {
-                        gt: 50,
-                        lte: 100,
+                        gt: 5,
+                        lte: 10,
                         color: '#ffde33'
                     }, {
-                        gt: 100,
-                        lte: 150,
+                        gt: 10,
+                        lte: 30,
                         color: '#ff9933'
                     }, {
-                        gt: 150,
-                        lte: 200,
+                        gt: 30,
+                        lte: 60,
                         color: '#cc0033'
                     }, {
-                        gt: 200,
-                        lte: 300,
+                        gt: 60,
+                        lte: 90,
                         color: '#660099'
                     }, {
-                        gt: 300,
+                        gt: 90,
                         color: '#7e0023'
                     }],
                     outOfRange: {
@@ -314,7 +313,9 @@ class Main extends Component {
                     name: '入店流量',
                     left: 'center',
                     type: 'line',
-                    data: this.state.checkInFlow,
+                    data: this.state.userDiagramData.map(function (item) {
+                        return item[2];
+                    }),
                     markLine: {
                         silent: true,
                         label: '入店流量',
